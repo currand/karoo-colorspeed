@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Color Speed</string>
+    <string name="extension_name">Color Speed</string>
+    <string name="extension_description">Color coded speed based on ride average</string>
+    <string name="speed_title">Speed</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionInfo
+    displayName="@string/extension_name"
+    icon="@drawable/icon_gauge"
+    id="karoocolorspeed"
+    scansDevices="false">
+    <DataType
+        typeId="colorspeed"
+        description="@string/extension_description"
+        displayName="@string/extension_name"
+        graphical="true"
+        icon="@drawable/icon_gauge" />
+</ExtensionInfo>
