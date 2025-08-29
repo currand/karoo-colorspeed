@@ -9,8 +9,6 @@ A speed field that changes color based on current speed vs. ride or average spee
 
 ## Requirements
 - Karoo (tested on last Karoo ) with version 1.527 or later
-- A relatively accurate assessment of your 60-minute Critical Power (CP60) or your Functional Threshold Power (FTP)
-- A power meter
 
 ## Installation
 
