@@ -8,8 +8,9 @@ import timber.log.Timber
 class ColorApplication: Application() {
     override fun onCreate() {
         super.onCreate()
-        Timber.plant(Timber.DebugTree())
-        Timber.d("Starting Color Speed")
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+            Timber.d("Starting Color Speed")
+        }
     }
-
 }

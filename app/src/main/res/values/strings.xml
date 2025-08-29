@@ -3,6 +3,7 @@
     <string name="extension_name">Color Speed</string>
     <string name="extension_description">Color coded speed based on ride average</string>
     <string name="speed_title">Speed vs. Ride Average</string>
+    <string name="short_title">Speed</string>
     <string name="avg_speed_title">Speed vs. Lap Average</string>
     <string name="avg_speed_description">Current speed vs. lap average</string>
     <string name="lap_speed_title">Current vs. last lap</string>

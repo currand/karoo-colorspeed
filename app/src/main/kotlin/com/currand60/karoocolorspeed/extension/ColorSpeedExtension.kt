@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.hammerhead.karooext.models.KarooEvent
 import io.hammerhead.karooext.models.OnStreamState
 import io.hammerhead.karooext.models.StreamState
+import io.hammerhead.karooext.models.UserProfile
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -57,10 +58,10 @@ fun KarooSystemService.streamDataFlow(dataTypeId: String): Flow<StreamState> {
     }
 }
 
-inline fun <reified T : KarooEvent> KarooSystemService.consumerFlow(): Flow<T> {
+fun KarooSystemService.streamUserProfile(): Flow<UserProfile> {
     return callbackFlow {
-        val listenerId = addConsumer<T> {
-            trySend(it)
+        val listenerId = addConsumer { userProfile: UserProfile ->
+            trySendBlocking(userProfile)
         }
         awaitClose {
             removeConsumer(listenerId)

@@ -6,6 +6,7 @@ import androidx.glance.appwidget.ExperimentalGlanceRemoteViewsApi
 import androidx.glance.appwidget.GlanceRemoteViews
 import com.currand60.karoocolorspeed.R
 import com.currand60.karoocolorspeed.extension.streamDataFlow
+import com.currand60.karoocolorspeed.extension.streamUserProfile
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.DataTypeImpl
 import io.hammerhead.karooext.internal.ViewEmitter
@@ -14,6 +15,7 @@ import io.hammerhead.karooext.models.DataType
 import io.hammerhead.karooext.models.StreamState
 import io.hammerhead.karooext.models.UpdateGraphicConfig
 import io.hammerhead.karooext.models.UpdateNumericConfig
+import io.hammerhead.karooext.models.UserProfile
 import io.hammerhead.karooext.models.ViewConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -63,37 +65,42 @@ class LapsColorSpeed(
                 UpdateGraphicConfig(showHeader = false)
             )
             emitter.onNext(
-                UpdateNumericConfig(DataType.Type.SPEED)
+                UpdateNumericConfig(DataType.Field.SPEED)
             )
         }
         val viewJob = dataScope.launch {
-                    val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAP) else previewFlow()
-                    val averageSpeedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAST_LAP) else previewFlow(50.0)
-                    combine(speedFlow, averageSpeedFlow) { speedState, averageSpeedState ->
-                        if (speedState is StreamState.Streaming && averageSpeedState is StreamState.Streaming) {
-                            Pair(
-                                speedState.dataPoint.singleValue!!,
-                                averageSpeedState.dataPoint.singleValue!!
-                            )
-                        } else {
-                            Pair(0.0, 0.0)
-                        }
-                    }.onEach {
-                        Timber.d("speed: ${it.first}, average: ${it.second}")
-                    }.collect {
-                        val result = glance.compose(context, DpSize.Unspecified) {
-                            ColorSpeedView(
-                                context,
-                                it.first,
-                                it.second,
-                                config,
-                                context.getString(R.string.lap_speed_title),
-                                context.getString(R.string.lap_speed_description)
-                            )
-                        }
-                        emitter.updateView(result.remoteViews)
-                    }
+            val userProfileFlow = karooSystem.streamUserProfile()
+            val speedFlow = karooSystem.streamDataFlow(DataType.Type.SPEED)// else previewFlow()
+            val averageSpeedFlow = karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED)// else previewFlow(50.0)
+            combine(speedFlow, averageSpeedFlow, userProfileFlow) { speedState, averageSpeedState, userProfileState ->
+                val speedUnits = when(userProfileState.preferredUnit.distance) {
+                    UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694
+                    else -> 3.6
                 }
+                if (speedState is StreamState.Streaming && averageSpeedState is StreamState.Streaming) {
+                    Pair(
+                        speedState.dataPoint.singleValue!!.toDouble() * speedUnits,
+                        averageSpeedState.dataPoint.singleValue!!.toDouble() * speedUnits
+                    )
+                } else {
+                    Pair(0.0, 0.0)
+                }
+            }.onEach {
+                Timber.d("$TYPE_ID ${it.first}, average: ${it.second}")
+            }.collect {
+                val result = glance.compose(context, DpSize.Unspecified) {
+                    ColorSpeedView(
+                        context,
+                        it.first,
+                        it.second,
+                        config,
+                        context.getString(R.string.lap_speed_title),
+                        context.getString(R.string.lap_speed_description)
+                    )
+                }
+                emitter.updateView(result.remoteViews)
+            }
+        }
         emitter.setCancellable {
             viewJob.cancel()
             configJob.cancel()

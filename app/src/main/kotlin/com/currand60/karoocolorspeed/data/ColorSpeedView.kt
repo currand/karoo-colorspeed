@@ -62,6 +62,12 @@ fun ColorSpeedView(
         speedPercentageOfAverage < 105.0 -> Color(context.getColor(R.color.hh_light_blue))
         else -> Color(context.getColor(R.color.hh_green))
     }
+    
+    val finalTitle: String = if (config.gridSize.first == 60) {
+        title.uppercase()
+    } else {
+        context.getString(R.string.short_title).uppercase()
+    }
 
     Column(
         modifier = GlanceModifier
@@ -84,7 +90,7 @@ fun ColorSpeedView(
                 colorFilter = ColorFilter.tint(ColorProvider(R.color.text_color)),
             )
             Text(
-                text = title.uppercase(),
+                text = finalTitle.uppercase(),
                 style = TextStyle(
                     color = ColorProvider(R.color.text_color),
                     fontSize = TextUnit(16f, TextUnitType.Sp),
@@ -123,7 +129,7 @@ fun previewColorSpeedUnder() {
     ColorSpeedView(
         context = LocalContext.current,
         currentSpeed = 40.5,
-        averageSpeed = 50.95,
+        averageSpeed = 47.959,
         title = "Speed",
         description = "Stuff",
         config = ViewConfig(
@@ -163,13 +169,13 @@ fun previewColorSpeedZero() {
     ColorSpeedView(
         context = LocalContext.current,
         currentSpeed = 90.5,
-        averageSpeed = 0.0,
-        title = "Speed",
+        averageSpeed = 25.0,
+        title = "Long Speed Title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.CENTER,
+            alignment = ViewConfig.Alignment.LEFT,
             textSize = 54,
-            gridSize = Pair(30,20),
+            gridSize = Pair(60,20),
             viewSize = Pair(478,214),
             preview = true,
         )

@@ -15,7 +15,7 @@ android {
         minSdk = 23
         targetSdk = 34
         versionCode = 1
-        versionName = "0.0.1"
+        versionName = "0.1.0-alpha"
         signingConfig = signingConfigs.getByName("debug")
 
     }
@@ -65,13 +65,13 @@ tasks.register("generateManifest") {
     doLast {
         val manifestFile = file("$projectDir/manifest.json")
         val manifest = mapOf(
-            "label" to "W' Balance",
-            "packageName" to "com.currand60.wprimebalance",
-            "latestApkUrl" to "https://github.com/currand/karoo-wprimebalance/releases/latest/download/app-release.apk",
+            "label" to "KAroo Color Speed",
+            "packageName" to "com.currand60.karoocolorspeed",
+            "latestApkUrl" to "https://github.com/currand/karoo-colorspeed/releases/latest/download/app-release.apk",
             "latestVersion" to android.defaultConfig.versionName,
             "latestVersionCode" to android.defaultConfig.versionCode,
             "developer" to "currand60",
-            "description" to "Calculates W' Balance during the ride and displays it in several formats",
+            "description" to "Colored Speed indicator based on ride or lap average speed",
         )
 
         val gson = groovy.json.JsonBuilder(manifest).toPrettyString()
