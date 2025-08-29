@@ -1,7 +1,9 @@
 package com.currand60.karoocolorspeed.extension
 
 import com.currand60.karoocolorspeed.BuildConfig
-import com.currand60.karoocolorspeed.data.ColorSpeed
+import com.currand60.karoocolorspeed.data.AvgColorSpeed
+import com.currand60.karoocolorspeed.data.CurrentColorSpeed
+import com.currand60.karoocolorspeed.data.LapsColorSpeed
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.KarooExtension
 import javax.inject.Inject
@@ -13,6 +15,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -23,8 +26,23 @@ class ColorSpeedExtension : KarooExtension("karoocolorspeed", BuildConfig.VERSIO
 
     override val types by lazy {
         listOf(
-            ColorSpeed(extension)
+            CurrentColorSpeed(karooSystem, extension),
+            LapsColorSpeed(karooSystem, extension),
+            AvgColorSpeed(karooSystem, extension)
         )
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        karooSystem.connect { connected ->
+            Timber.d("Karoo connected: $connected")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        karooSystem.disconnect()
+        Timber.d("Karoo disconnected")
     }
 }
 
@@ -49,3 +67,4 @@ inline fun <reified T : KarooEvent> KarooSystemService.consumerFlow(): Flow<T> {
         }
     }
 }
+

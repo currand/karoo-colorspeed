@@ -5,9 +5,21 @@
     id="karoocolorspeed"
     scansDevices="false">
     <DataType
-        typeId="colorspeed"
+        typeId="currentcolorspeed"
         description="@string/extension_description"
-        displayName="@string/extension_name"
+        displayName="@string/speed_title"
+        graphical="true"
+        icon="@drawable/icon_gauge" />
+    <DataType
+        typeId="lapscolorspeed"
+        description="@string/lap_speed_description"
+        displayName="@string/lap_speed_title"
+        graphical="true"
+        icon="@drawable/icon_gauge" />
+    <DataType
+        typeId="avgcolorspeed"
+        description="@string/avg_speed_description"
+        displayName="@string/avg_speed_title"
         graphical="true"
         icon="@drawable/icon_gauge" />
 </ExtensionInfo>
