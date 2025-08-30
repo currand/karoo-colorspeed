@@ -76,8 +76,8 @@ class CurrentColorSpeed(
                 }
                 if (speedState is StreamState.Streaming && averageSpeedState is StreamState.Streaming) {
                     Pair(
-                        speedState.dataPoint.singleValue!!.toDouble() * speedUnits,
-                        averageSpeedState.dataPoint.singleValue!!.toDouble() * speedUnits
+                        speedState.dataPoint.singleValue!! * speedUnits,
+                        averageSpeedState.dataPoint.singleValue!! * speedUnits
                     )
                 } else {
                     Pair(0.0, 0.0)
