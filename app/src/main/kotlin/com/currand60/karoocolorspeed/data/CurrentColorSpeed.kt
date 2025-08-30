@@ -91,7 +91,7 @@ class CurrentColorSpeed(
                         it.first,
                         it.second,
                         config,
-                        context.getString(R.string.speed_title),
+                        "speed_title",
                         context.getString(R.string.extension_description)
                     )
                 }

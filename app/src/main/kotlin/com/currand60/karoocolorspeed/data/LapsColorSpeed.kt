@@ -94,7 +94,7 @@ class LapsColorSpeed(
                         it.first,
                         it.second,
                         config,
-                        context.getString(R.string.lap_speed_title),
+                        "lap_speed_title",
                         context.getString(R.string.lap_speed_description)
                     )
                 }

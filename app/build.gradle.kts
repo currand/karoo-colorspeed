@@ -1,4 +1,4 @@
-import java.lang.module.ModuleFinder.compose
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -6,6 +6,12 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.dagger.hilt.android)
     alias(libs.plugins.google.devtools.ksp)
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget("17")
+    }
 }
 
 android {
@@ -16,8 +22,8 @@ android {
         applicationId = "com.currand60.karoocolorspeed"
         minSdk = 23
         targetSdk = 34
-        versionCode = 2
-        versionName = "0.1.0-alpha"
+        versionCode = 1
+        versionName = "0.1.1-alpha"
         signingConfig = signingConfigs.getByName("debug")
 
     }
@@ -36,9 +42,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+
     buildFeatures {
         compose = true
         buildConfig = true
@@ -67,8 +71,8 @@ tasks.register("generateManifest") {
     doLast {
         val manifestFile = file("$projectDir/manifest.json")
         val manifest = mapOf(
-            "label" to "KAroo Color Speed",
-            "packageName" to "com.currand60.karoocolorspeed",
+            "label" to "Karoo Color Speed",
+            "packageName" to android.namespace,
             "latestApkUrl" to "https://github.com/currand/karoo-colorspeed/releases/latest/download/app-release.apk",
             "latestVersion" to android.defaultConfig.versionName,
             "latestVersionCode" to android.defaultConfig.versionCode,
@@ -108,5 +112,4 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.timber)
     implementation(libs.kotlinx.coroutines.debug)
-
 }

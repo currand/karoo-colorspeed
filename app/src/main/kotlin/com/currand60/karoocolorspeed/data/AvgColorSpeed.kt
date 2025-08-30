@@ -93,7 +93,7 @@ class AvgColorSpeed(
                         it.first,
                         it.second,
                         config,
-                        context.getString(R.string.avg_speed_title),
+                        "avg_speed_title",
                         context.getString(R.string.avg_speed_description)
                     )
                 }

@@ -39,7 +39,7 @@ fun ColorSpeedView(
     currentSpeed: Double,
     averageSpeed: Double,
     config: ViewConfig,
-    title: String,
+    titleResource: String,
     description: String
 ) {
 
@@ -56,17 +56,27 @@ fun ColorSpeedView(
     }
 
     val backgroundColor = when {
-        currentSpeed <= 1.0 -> Color(context.getColor(R.color.hh_light_blue))
-        speedPercentageOfAverage < 65.0 -> Color(context.getColor(R.color.hh_red))
-        speedPercentageOfAverage < 95.0 -> Color(context.getColor(R.color.hh_yellow))
-        speedPercentageOfAverage < 105.0 -> Color(context.getColor(R.color.hh_light_blue))
-        else -> Color(context.getColor(R.color.hh_green))
+        currentSpeed <= 1.0 -> Color(context.getColor(R.color.middle))
+        speedPercentageOfAverage < 50.0 -> Color(context.getColor(R.color.dark_red))
+        speedPercentageOfAverage < 65.0 -> Color(context.getColor(R.color.orange))
+        speedPercentageOfAverage < 95.0 -> Color(context.getColor(R.color.yellow))
+        speedPercentageOfAverage < 105.0 -> Color(context.getColor(R.color.light_green))
+        else -> Color(context.getColor(R.color.dark_green))
+    }
+
+    val textColor = when {
+        speedPercentageOfAverage < 50.0 -> Color(context.getColor(R.color.text_color_max))
+        else -> Color(context.getColor(R.color.text_color))
     }
     
     val finalTitle: String = if (config.gridSize.first == 60) {
+        val titleId = context.resources.getIdentifier(titleResource, "string", context.packageName)
+        val title = context.getString(titleId)
         title.uppercase()
     } else {
-        context.getString(R.string.short_title).uppercase()
+        val titleId = context.resources.getIdentifier("${titleResource}_short", "string", context.packageName)
+        val title = context.getString(titleId)
+        title.uppercase()
     }
 
     Column(
@@ -87,12 +97,12 @@ fun ColorSpeedView(
                 ),
                 contentDescription = description,
                 contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(ColorProvider(R.color.text_color)),
+                colorFilter = ColorFilter.tint(ColorProvider(textColor)),
             )
             Text(
                 text = finalTitle.uppercase(),
                 style = TextStyle(
-                    color = ColorProvider(R.color.text_color),
+                    color = ColorProvider(textColor),
                     fontSize = TextUnit(16f, TextUnitType.Sp),
                     textAlign = alignment,
                     fontFamily = FontFamily.SansSerif
@@ -112,7 +122,7 @@ fun ColorSpeedView(
                     .fillMaxWidth(),
                 text = ((currentSpeed * 10.0).roundToInt() / 10.0).toString(),
                 style = TextStyle(
-                    color = ColorProvider(R.color.text_color),
+                    color = ColorProvider(textColor),
                     fontSize = TextUnit(config.textSize.toFloat(), TextUnitType.Sp),
                     textAlign = alignment,
                     fontFamily = FontFamily.Monospace,
@@ -125,12 +135,12 @@ fun ColorSpeedView(
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)
 @Composable
-fun previewColorSpeedUnder() {
+fun PreviewColorSpeedUnder() {
     ColorSpeedView(
         context = LocalContext.current,
         currentSpeed = 40.5,
-        averageSpeed = 47.959,
-        title = "Speed",
+        averageSpeed = 90.959,
+        titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.RIGHT,
@@ -145,12 +155,12 @@ fun previewColorSpeedUnder() {
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)
 @Composable
-fun previewColorSpeedOver() {
+fun PreviewColorSpeedOver() {
     ColorSpeedView(
         context = LocalContext.current,
         currentSpeed = 50.95,
         averageSpeed = 40.5,
-        title = "Speed",
+        titleResource = "avg_speed_title",
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
@@ -165,12 +175,12 @@ fun previewColorSpeedOver() {
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)
 @Composable
-fun previewColorSpeedZero() {
+fun PreviewColorSpeedZero() {
     ColorSpeedView(
         context = LocalContext.current,
-        currentSpeed = 90.5,
-        averageSpeed = 25.0,
-        title = "Long Speed Title",
+        currentSpeed = 50.5,
+        averageSpeed = 50.0,
+        titleResource = "speed_title",
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.LEFT,
