@@ -56,11 +56,11 @@ fun ColorSpeedView(
     }
 
     val backgroundColor = when {
-        currentSpeed <= 1.0 -> Color(context.getColor(R.color.middle))
-        speedPercentageOfAverage < 50.0 -> Color(context.getColor(R.color.dark_red))
-        speedPercentageOfAverage < 65.0 -> Color(context.getColor(R.color.orange))
-        speedPercentageOfAverage < 95.0 -> Color(context.getColor(R.color.yellow))
-        speedPercentageOfAverage < 105.0 -> Color(context.getColor(R.color.light_green))
+        currentSpeed <= 10.0 -> Color(context.getColor(R.color.middle))
+        speedPercentageOfAverage < 50.0 -> Color(context.getColor(R.color.middle))
+//        speedPercentageOfAverage < 65.0 -> Color(context.getColor(R.color.yellow))
+        speedPercentageOfAverage < 95.0 -> Color(context.getColor(R.color.middle))
+        speedPercentageOfAverage < 105.0 -> Color(context.getColor(R.color.yellow))
         else -> Color(context.getColor(R.color.dark_green))
     }
 
