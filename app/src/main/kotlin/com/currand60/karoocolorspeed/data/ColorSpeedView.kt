@@ -1,5 +1,6 @@
 package com.currand60.karoocolorspeed.data
 
+import android.R.attr.description
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -55,20 +56,16 @@ fun ColorSpeedView(
         ViewConfig.Alignment.RIGHT -> androidx.glance.text.TextAlign.End
     }
 
-    val backgroundColor = when {
-        currentSpeed <= 10.0 -> Color(context.getColor(R.color.middle))
-        speedPercentageOfAverage < 50.0 -> Color(context.getColor(R.color.middle))
-//        speedPercentageOfAverage < 65.0 -> Color(context.getColor(R.color.yellow))
-        speedPercentageOfAverage < 95.0 -> Color(context.getColor(R.color.middle))
-        speedPercentageOfAverage < 105.0 -> Color(context.getColor(R.color.yellow))
-        else -> Color(context.getColor(R.color.dark_green))
+    val (backgroundColor, textColor) = when {
+        currentSpeed <= 2.0 -> Pair(Color(context.getColor(R.color.middle)), Color(context.getColor(R.color.text_color)))
+        speedPercentageOfAverage < 50.0 -> Pair(Color(context.getColor(R.color.dark_red)), Color(context.getColor(R.color.text_color_max)))
+        speedPercentageOfAverage < 65.0 -> Pair(Color(context.getColor(R.color.orange)), Color(context.getColor(R.color.text_color)))
+        speedPercentageOfAverage in (95.0..105.0) -> Pair(Color(context.getColor(R.color.light_green)), Color(context.getColor(R.color.text_color)))
+        else -> Pair(Color(context.getColor(R.color.dark_green)), Color(context.getColor(R.color.text_color)))
     }
 
-    val textColor = when {
-        speedPercentageOfAverage < 50.0 -> Color(context.getColor(R.color.text_color_max))
-        else -> Color(context.getColor(R.color.text_color))
-    }
-    
+
+
     val finalTitle: String = if (config.gridSize.first == 60) {
         val titleId = context.resources.getIdentifier(titleResource, "string", context.packageName)
         val title = context.getString(titleId)
@@ -135,11 +132,11 @@ fun ColorSpeedView(
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)
 @Composable
-fun PreviewColorSpeedUnder() {
+fun PreviewColorSpeedUnder10() {
     ColorSpeedView(
         context = LocalContext.current,
-        currentSpeed = 40.5,
-        averageSpeed = 90.959,
+        currentSpeed = 4.0,
+        averageSpeed = 100.0,
         titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
@@ -155,11 +152,31 @@ fun PreviewColorSpeedUnder() {
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)
 @Composable
-fun PreviewColorSpeedOver() {
+fun PreviewColorSpeedUnder() {
     ColorSpeedView(
         context = LocalContext.current,
-        currentSpeed = 50.95,
-        averageSpeed = 40.5,
+        currentSpeed = 55.0,
+        averageSpeed = 100.0,
+        titleResource = "lap_speed_title",
+        description = "Stuff",
+        config = ViewConfig(
+            alignment = ViewConfig.Alignment.RIGHT,
+            textSize = 50,
+            gridSize = Pair(30,15),
+            viewSize = Pair(238,148),
+            preview = true
+        )
+    )
+}
+
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 150, heightDp = 90)
+@Composable
+fun PreviewColorSpeedOrange() {
+    ColorSpeedView(
+        context = LocalContext.current,
+        currentSpeed = 75.0,
+        averageSpeed = 100.0,
         titleResource = "avg_speed_title",
         description = "Stuff",
         config = ViewConfig(
@@ -175,10 +192,10 @@ fun PreviewColorSpeedOver() {
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)
 @Composable
-fun PreviewColorSpeedZero() {
+fun PreviewColorSpeedSteady() {
     ColorSpeedView(
         context = LocalContext.current,
-        currentSpeed = 50.5,
+        currentSpeed = 52.5,
         averageSpeed = 50.0,
         titleResource = "speed_title",
         description = "Stuff",
@@ -188,6 +205,26 @@ fun PreviewColorSpeedZero() {
             gridSize = Pair(60,20),
             viewSize = Pair(478,214),
             preview = true,
+        )
+    )
+}
+
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 150, heightDp = 90)
+@Composable
+fun PreviewColorSpeedOver() {
+    ColorSpeedView(
+        context = LocalContext.current,
+        currentSpeed = 105.5,
+        averageSpeed = 100.0,
+        titleResource = "lap_speed_title",
+        description = "Stuff",
+        config = ViewConfig(
+            alignment = ViewConfig.Alignment.RIGHT,
+            textSize = 45,
+            gridSize = Pair(30,15),
+            viewSize = Pair(238,148),
+            preview = true
         )
     )
 }

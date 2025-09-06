@@ -70,8 +70,8 @@ class LapsColorSpeed(
         }
         val viewJob = dataScope.launch {
             val userProfileFlow = karooSystem.streamUserProfile()
-            val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.SPEED) else previewFlow()
-            val averageSpeedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED) else previewFlow(10.0)
+            val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAP) else previewFlow()
+            val averageSpeedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAST_LAP) else previewFlow(10.0)
             combine(speedFlow, averageSpeedFlow, userProfileFlow) { speedState, averageSpeedState, userProfileState ->
                 val speedUnits = when(userProfileState.preferredUnit.distance) {
                     UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694

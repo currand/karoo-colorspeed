@@ -7,6 +7,7 @@ import com.currand60.karoocolorspeed.screens.MainScreen
 import com.currand60.karoocolorspeed.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
