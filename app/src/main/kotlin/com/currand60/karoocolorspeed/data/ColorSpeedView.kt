@@ -59,12 +59,13 @@ fun ColorSpeedView(
     }
 
     val (backgroundColor, textColor) = when {
-        currentSpeed <= colorConfig.stoppedValue -> Pair(Color(context.getColor(R.color.middle)), Color(context.getColor(R.color.text_color)))
+        currentSpeed <= colorConfig.stoppedValue -> Pair(Color.Transparent, Color(context.getColor(R.color.text_color)))
         speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> Pair(Color(context.getColor(R.color.dark_red)), Color(context.getColor(R.color.text_color_max)))
         speedPercentageOfAverage < colorConfig.speedPercentLevel2 -> Pair(Color(context.getColor(R.color.orange)), Color(context.getColor(R.color.text_color)))
-        speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> Pair(Color.Transparent, Color(context.getColor(R.color.text_color)))
+        speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> Pair(Color(context.getColor(R.color.middle)), Color(context.getColor(R.color.text_color)))
         speedPercentageOfAverage < colorConfig.speedPercentLevel4 -> Pair(Color(context.getColor(R.color.light_green)), Color(context.getColor(R.color.text_color)))
-        else -> Pair(Color(context.getColor(R.color.dark_green)), Color(context.getColor(R.color.text_color)))
+        speedPercentageOfAverage < colorConfig.speedPercentLevel5 -> Pair(Color(context.getColor(R.color.dark_green)), Color(context.getColor(R.color.text_color_max)))
+        else -> Pair(Color(context.getColor(R.color.dark_green)), Color(context.getColor(R.color.text_color_max)))
     }
 
 
@@ -222,7 +223,7 @@ fun PreviewColorSpeedSteady() {
 fun PreviewColorSpeedOver() {
     ColorSpeedView(
         context = LocalContext.current,
-        currentSpeed = 105.5,
+        currentSpeed = 125.5,
         averageSpeed = 100.0,
         titleResource = "lap_speed_title",
         description = "Stuff",

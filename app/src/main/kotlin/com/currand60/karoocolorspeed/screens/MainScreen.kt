@@ -175,7 +175,7 @@ fun MainScreen() {
         ) {
             Text(
                 text = "Color Speed Settings",
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Left,
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -183,7 +183,7 @@ fun MainScreen() {
                 text = "Enter the percentage of either average or target speed " +
                         "for this level and color",
                 textAlign = TextAlign.Left,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.onBackground,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
@@ -193,8 +193,7 @@ fun MainScreen() {
                     modifier = Modifier
                         .weight(0.2f)
                         .aspectRatio(1f)
-                        .clip(CircleShape)
-                        .background(color = Color(context.getColor(R.color.middle)), CircleShape)
+                        .border(BorderStroke(1.dp, Color.Black), CircleShape)
                 )
                 PercentConfigField(
                     label = "Stopped",
@@ -244,7 +243,7 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent1Error,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = speedPercent1Input.toInt(),
+                    compValLow = if (!speedPercent1Error) speedPercent1Input.toInt() else 0,
                     compValHigh = currentConfig.speedPercentLevel2
                 )
             }
@@ -274,7 +273,7 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent2Error,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = speedPercent2Input.toInt(),
+                    compValLow = if (!speedPercent2Error) speedPercent2Input.toInt() else 0,
                     compValHigh = currentConfig.speedPercentMiddleTargetLow
                 )
             }
@@ -285,7 +284,8 @@ fun MainScreen() {
                     modifier = Modifier
                         .weight(0.2f)
                         .aspectRatio(1f)
-                        .border(BorderStroke(1.dp, Color.Black), CircleShape)
+                        .clip(CircleShape)
+                        .background(color = Color(context.getColor(R.color.middle)), CircleShape)
                 )
                 PercentConfigField(
                     label = "Target low",
@@ -303,8 +303,8 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercentTargetLowError,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = speedPercentTargetLowInput.toInt(),
-                    compValHigh = currentConfig.speedPercentMiddleTargetLow
+                    compValLow = if (!speedPercentTargetLowError) speedPercentTargetLowInput.toInt() else 0,
+                    compValHigh = currentConfig.speedPercentMiddleTargetHigh
                 )
                 PercentConfigField(
                     label = "Target high",
@@ -322,8 +322,8 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercentTargetHighError,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = speedPercentTargetHighInput.toInt(),
-                    compValHigh = currentConfig.speedPercentMiddleTargetHigh
+                    compValLow = if (!speedPercentTargetHighError) speedPercentTargetHighInput.toInt() else 0,
+                    compValHigh = currentConfig.speedPercentLevel4
                 )
             }
             Row(
@@ -352,8 +352,8 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent4Error,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = speedPercent4Input.toInt(),
-                    compValHigh = currentConfig.speedPercentLevel4
+                    compValLow = if (!speedPercent4Error) speedPercent4Input.toInt() else 0,
+                    compValHigh = currentConfig.speedPercentLevel5
                 )
             }
             Row(
@@ -383,7 +383,7 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent5Error,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = speedPercent5Input.toInt(),
+                    compValLow = currentConfig.speedPercentLevel4,
                     compValHigh = currentConfig.speedPercentLevel5
                 )
             }
