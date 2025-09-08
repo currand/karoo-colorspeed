@@ -7,6 +7,7 @@ import androidx.glance.appwidget.GlanceRemoteViews
 import com.currand60.karoocolorspeed.R
 import com.currand60.karoocolorspeed.extension.streamDataFlow
 import com.currand60.karoocolorspeed.extension.streamUserProfile
+import com.currand60.karoocolorspeed.managers.ConfigurationManager
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.DataTypeImpl
 import io.hammerhead.karooext.internal.ViewEmitter
@@ -23,6 +24,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
@@ -33,7 +35,7 @@ import timber.log.Timber
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
 class LapsColorSpeed(
     private val karooSystem: KarooSystemService,
-    extension: String
+    extension: String,
 ) : DataTypeImpl(extension, TYPE_ID) {
     private val glance = GlanceRemoteViews()
 
@@ -69,6 +71,7 @@ class LapsColorSpeed(
             )
         }
         val viewJob = dataScope.launch {
+            val colorConfig = ConfigurationManager(context).getConfigFlow().first()
             val userProfileFlow = karooSystem.streamUserProfile()
             val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAP) else previewFlow()
             val averageSpeedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAST_LAP) else previewFlow(10.0)
@@ -94,6 +97,7 @@ class LapsColorSpeed(
                         it.first,
                         it.second,
                         config,
+                        colorConfig,
                         "lap_speed_title",
                         context.getString(R.string.lap_speed_description)
                     )

@@ -27,7 +27,9 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import com.currand60.karoocolorspeed.R
 import com.currand60.karoocolorspeed.extension.streamUserProfile
+import com.currand60.karoocolorspeed.managers.ConfigurationManager
 import io.hammerhead.karooext.models.UserProfile
+import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
 class CurrentColorSpeed(
@@ -66,6 +68,7 @@ class CurrentColorSpeed(
             )
         }
         val viewJob = dataScope.launch {
+            val colorConfig = ConfigurationManager(context).getConfigFlow().first()
             val userProfileFlow = karooSystem.streamUserProfile()
             val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.SPEED) else previewFlow()
             val averageSpeedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED) else previewFlow(10.0)
@@ -91,6 +94,7 @@ class CurrentColorSpeed(
                         it.first,
                         it.second,
                         config,
+                        colorConfig,
                         "speed_title",
                         context.getString(R.string.extension_description)
                     )

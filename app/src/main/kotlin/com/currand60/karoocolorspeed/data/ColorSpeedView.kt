@@ -1,6 +1,5 @@
 package com.currand60.karoocolorspeed.data
 
-import android.R.attr.description
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -40,14 +39,17 @@ fun ColorSpeedView(
     currentSpeed: Double,
     averageSpeed: Double,
     config: ViewConfig,
+    colorConfig: ConfigData,
     titleResource: String,
     description: String
 ) {
 
-    val speedPercentageOfAverage: Double = if (currentSpeed > 0 && averageSpeed > 0) {
-        (currentSpeed / averageSpeed) * 100.0
+
+
+    val speedPercentageOfAverage: Int = if (currentSpeed > 0 && averageSpeed > 0) {
+        ((currentSpeed / averageSpeed) * 100.0).toInt()
     } else {
-        0.0
+        0
     }
 
     val alignment: androidx.glance.text.TextAlign = when (config.alignment) {
@@ -57,10 +59,11 @@ fun ColorSpeedView(
     }
 
     val (backgroundColor, textColor) = when {
-        currentSpeed <= 2.0 -> Pair(Color(context.getColor(R.color.middle)), Color(context.getColor(R.color.text_color)))
-        speedPercentageOfAverage < 50.0 -> Pair(Color(context.getColor(R.color.dark_red)), Color(context.getColor(R.color.text_color_max)))
-        speedPercentageOfAverage < 65.0 -> Pair(Color(context.getColor(R.color.orange)), Color(context.getColor(R.color.text_color)))
-        speedPercentageOfAverage in (95.0..105.0) -> Pair(Color(context.getColor(R.color.light_green)), Color(context.getColor(R.color.text_color)))
+        currentSpeed <= colorConfig.stoppedValue -> Pair(Color(context.getColor(R.color.middle)), Color(context.getColor(R.color.text_color)))
+        speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> Pair(Color(context.getColor(R.color.dark_red)), Color(context.getColor(R.color.text_color_max)))
+        speedPercentageOfAverage < colorConfig.speedPercentLevel2 -> Pair(Color(context.getColor(R.color.orange)), Color(context.getColor(R.color.text_color)))
+        speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> Pair(Color.Transparent, Color(context.getColor(R.color.text_color)))
+        speedPercentageOfAverage < colorConfig.speedPercentLevel4 -> Pair(Color(context.getColor(R.color.light_green)), Color(context.getColor(R.color.text_color)))
         else -> Pair(Color(context.getColor(R.color.dark_green)), Color(context.getColor(R.color.text_color)))
     }
 
@@ -145,7 +148,8 @@ fun PreviewColorSpeedUnder10() {
             gridSize = Pair(30,15),
             viewSize = Pair(238,148),
             preview = true
-        )
+        ),
+        colorConfig = ConfigData.DEFAULT
     )
 }
 
@@ -165,7 +169,8 @@ fun PreviewColorSpeedUnder() {
             gridSize = Pair(30,15),
             viewSize = Pair(238,148),
             preview = true
-        )
+        ),
+        colorConfig = ConfigData.DEFAULT
     )
 }
 
@@ -185,7 +190,8 @@ fun PreviewColorSpeedOrange() {
             gridSize = Pair(30,20),
             viewSize = Pair(478,214),
             preview = true
-        )
+        ),
+        colorConfig = ConfigData.DEFAULT
     )
 }
 
@@ -205,7 +211,8 @@ fun PreviewColorSpeedSteady() {
             gridSize = Pair(60,20),
             viewSize = Pair(478,214),
             preview = true,
-        )
+        ),
+        colorConfig = ConfigData.DEFAULT
     )
 }
 
@@ -225,6 +232,7 @@ fun PreviewColorSpeedOver() {
             gridSize = Pair(30,15),
             viewSize = Pair(238,148),
             preview = true
-        )
+        ),
+        colorConfig = ConfigData.DEFAULT
     )
 }
