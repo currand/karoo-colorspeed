@@ -28,7 +28,8 @@ class ConfigurationManager (
         private val STOPPED_VALUE_KEY = intPreferencesKey("stoppedValue")
         private val SPEED_PERCENT_LEVEL1_KEY = intPreferencesKey("speedPercentLevel1")
         private val SPEED_PERCENT_LEVEL2_KEY = intPreferencesKey("speedPercentLevel2")
-        private val SPEED_PERCENT_LEVEL3_KEY = intPreferencesKey("speedPercentLevel3")
+        private val SPEED_PERCENT_MIDDLE_TARGET_LOW_KEY = intPreferencesKey("speedPercentMiddleTargetLow")
+        private val SPEED_PERCENT_MIDDLE_TARGET_HIGH_KEY = intPreferencesKey("speedPercentMiddleTargetHigh")
         private val SPEED_PERCENT_LEVEL4_KEY = intPreferencesKey("speedPercentLevel4")
         private val SPEED_PERCENT_LEVEL5_KEY = intPreferencesKey("speedPercentLevel5")
         private val TARGET_SPEED_KEY = intPreferencesKey("targetSpeed")
@@ -44,7 +45,8 @@ class ConfigurationManager (
             preferences[STOPPED_VALUE_KEY] = config.stoppedValue
             preferences[SPEED_PERCENT_LEVEL1_KEY] = config.speedPercentLevel1
             preferences[SPEED_PERCENT_LEVEL2_KEY] = config.speedPercentLevel2
-            preferences[SPEED_PERCENT_LEVEL3_KEY] = config.speedPercentLevel3
+            preferences[SPEED_PERCENT_MIDDLE_TARGET_LOW_KEY] = config.speedPercentMiddleTargetLow
+            preferences[SPEED_PERCENT_MIDDLE_TARGET_HIGH_KEY] = config.speedPercentMiddleTargetHigh
             preferences[SPEED_PERCENT_LEVEL4_KEY] = config.speedPercentLevel4
             preferences[SPEED_PERCENT_LEVEL5_KEY] = config.speedPercentLevel5
             preferences[TARGET_SPEED_KEY] = config.targetSpeed
@@ -64,7 +66,8 @@ class ConfigurationManager (
                 stoppedValue = preferences[STOPPED_VALUE_KEY] ?: ConfigData.DEFAULT.stoppedValue,
                 speedPercentLevel1 = preferences[SPEED_PERCENT_LEVEL1_KEY] ?: ConfigData.DEFAULT.speedPercentLevel1,
                 speedPercentLevel2 = preferences[SPEED_PERCENT_LEVEL2_KEY] ?: ConfigData.DEFAULT.speedPercentLevel2,
-                speedPercentLevel3 = preferences[SPEED_PERCENT_LEVEL3_KEY] ?: ConfigData.DEFAULT.speedPercentLevel3,
+                speedPercentMiddleTargetLow = preferences[SPEED_PERCENT_MIDDLE_TARGET_LOW_KEY] ?: ConfigData.DEFAULT.speedPercentMiddleTargetLow,
+                speedPercentMiddleTargetHigh = preferences[SPEED_PERCENT_MIDDLE_TARGET_HIGH_KEY] ?: ConfigData.DEFAULT.speedPercentMiddleTargetHigh,
                 speedPercentLevel4 = preferences[SPEED_PERCENT_LEVEL4_KEY] ?: ConfigData.DEFAULT.speedPercentLevel4,
                 speedPercentLevel5 = preferences[SPEED_PERCENT_LEVEL5_KEY] ?: ConfigData.DEFAULT.speedPercentLevel5,
                 targetSpeed = preferences[TARGET_SPEED_KEY] ?: ConfigData.DEFAULT.targetSpeed,
@@ -83,8 +86,8 @@ class ConfigurationManager (
                 stoppedValue = preferences[STOPPED_VALUE_KEY] ?: ConfigData.DEFAULT.stoppedValue,
                 speedPercentLevel1 = preferences[SPEED_PERCENT_LEVEL1_KEY] ?: ConfigData.DEFAULT.speedPercentLevel1,
                 speedPercentLevel2 = preferences[SPEED_PERCENT_LEVEL2_KEY] ?: ConfigData.DEFAULT.speedPercentLevel2,
-                speedPercentLevel3 = preferences[SPEED_PERCENT_LEVEL3_KEY] ?: ConfigData.DEFAULT.speedPercentLevel3,
-                speedPercentLevel4 = preferences[SPEED_PERCENT_LEVEL4_KEY] ?: ConfigData.DEFAULT.speedPercentLevel4,
+                speedPercentMiddleTargetLow = preferences[SPEED_PERCENT_MIDDLE_TARGET_LOW_KEY] ?: ConfigData.DEFAULT.speedPercentMiddleTargetLow,
+                speedPercentMiddleTargetHigh = preferences[SPEED_PERCENT_MIDDLE_TARGET_HIGH_KEY] ?: ConfigData.DEFAULT.speedPercentMiddleTargetHigh,                speedPercentLevel4 = preferences[SPEED_PERCENT_LEVEL4_KEY] ?: ConfigData.DEFAULT.speedPercentLevel4,
                 speedPercentLevel5 = preferences[SPEED_PERCENT_LEVEL5_KEY] ?: ConfigData.DEFAULT.speedPercentLevel5,
                 targetSpeed = preferences[TARGET_SPEED_KEY] ?: ConfigData.DEFAULT.targetSpeed,
             )
