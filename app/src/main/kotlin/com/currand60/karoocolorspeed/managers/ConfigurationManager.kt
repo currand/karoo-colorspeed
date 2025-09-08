@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.currand60.karoocolorspeed.data.ConfigData
 import kotlinx.coroutines.flow.Flow
@@ -25,13 +25,13 @@ class ConfigurationManager (
         private val USE_BG_COLOR_KEY = booleanPreferencesKey("useBackgroundColors")
         private val USE_ARROWS_KEY = booleanPreferencesKey("useArrows")
         private val USE_TARGET_SPEED_KEY = booleanPreferencesKey("useTargetSpeed")
-        private val STOPPED_VALUE_KEY = doublePreferencesKey("stoppedValue")
-        private val SPEED_PERCENT_LEVEL1_KEY = doublePreferencesKey("speedPercentLevel1")
-        private val SPEED_PERCENT_LEVEL2_KEY = doublePreferencesKey("speedPercentLevel2")
-        private val SPEED_PERCENT_LEVEL3_KEY = doublePreferencesKey("speedPercentLevel3")
-        private val SPEED_PERCENT_LEVEL4_KEY = doublePreferencesKey("speedPercentLevel4")
-        private val SPEED_PERCENT_LEVEL5_KEY = doublePreferencesKey("speedPercentLevel5")
-        private val TARGET_SPEED_KEY = doublePreferencesKey("targetSpeed")
+        private val STOPPED_VALUE_KEY = intPreferencesKey("stoppedValue")
+        private val SPEED_PERCENT_LEVEL1_KEY = intPreferencesKey("speedPercentLevel1")
+        private val SPEED_PERCENT_LEVEL2_KEY = intPreferencesKey("speedPercentLevel2")
+        private val SPEED_PERCENT_LEVEL3_KEY = intPreferencesKey("speedPercentLevel3")
+        private val SPEED_PERCENT_LEVEL4_KEY = intPreferencesKey("speedPercentLevel4")
+        private val SPEED_PERCENT_LEVEL5_KEY = intPreferencesKey("speedPercentLevel5")
+        private val TARGET_SPEED_KEY = intPreferencesKey("targetSpeed")
 
     }
 
