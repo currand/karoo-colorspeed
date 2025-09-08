@@ -10,7 +10,8 @@ data class ConfigData(
     val stoppedValue: Int,
     val speedPercentLevel1: Int,
     val speedPercentLevel2: Int,
-    val speedPercentLevel3: Int,
+    val speedPercentMiddleTargetLow: Int,
+    val speedPercentMiddleTargetHigh: Int,
     val speedPercentLevel4: Int,
     val speedPercentLevel5: Int,
     val targetSpeed: Int,
@@ -27,9 +28,10 @@ data class ConfigData(
             stoppedValue = 2,
             speedPercentLevel1 = 50,
             speedPercentLevel2 = 65,
-            speedPercentLevel3 = 95,
-            speedPercentLevel4 = 105,
-            speedPercentLevel5 = 110,
+            speedPercentMiddleTargetLow = 95,
+            speedPercentMiddleTargetHigh = 105,
+            speedPercentLevel4 = 110,
+            speedPercentLevel5 = 120,
             targetSpeed = 0,
         )
     }
