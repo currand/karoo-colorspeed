@@ -55,7 +55,6 @@ import com.currand60.karoocolorspeed.extension.streamUserProfile
 import com.currand60.karoocolorspeed.managers.ConfigurationManager
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.models.UserProfile
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -78,6 +77,7 @@ fun PercentConfigField(
     modifier: Modifier = Modifier,
     isError: Boolean,
     errorSupportingText: String? = null,
+    prefix: String? = null,
     compValLow: Int = 0,
     compValHigh: Int = 1,
 ) {
@@ -103,6 +103,7 @@ fun PercentConfigField(
         label = { Text(text = label) },
         modifier = modifier,
         placeholder = { Text(initialValue.toString()) },
+        prefix = if (prefix != null) { { Text(prefix) } } else (null),
         suffix = { Text(units) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true, // Restrict to a single line
@@ -166,15 +167,22 @@ fun MainScreen() {
     ) {
         Column(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(5.dp)
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
                 .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(5.dp)
+            verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             Text(
                 text = "Color Speed Settings",
                 textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Enter the percentage of either average or target speed " +
+                        "for this level and color",
+                textAlign = TextAlign.Left,
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -191,9 +199,10 @@ fun MainScreen() {
                 PercentConfigField(
                     label = "Stopped",
                     initialValue = currentConfig.stoppedValue,
+                    prefix = "<",
                     units = when (karooDistanceUnit) {
-                        UserProfile.PreferredUnit.UnitType.IMPERIAL -> "mp/h"
-                        else -> "km/h"
+                        UserProfile.PreferredUnit.UnitType.IMPERIAL -> "mph"
+                        else -> "kmh"
                     },
                     onValueParsed = { newValueString, parsedValue, isValid ->
                         stoppedError = !isValid
@@ -221,6 +230,7 @@ fun MainScreen() {
                 PercentConfigField(
                     label = "Well below target",
                     initialValue = currentConfig.speedPercentLevel1,
+                    prefix = "<",
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
                         speedPercent1Input = newValueString
@@ -359,6 +369,7 @@ fun MainScreen() {
                 PercentConfigField(
                     label = "Well above target",
                     initialValue = currentConfig.speedPercentLevel5,
+                    prefix = ">",
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
                         speedPercent5Input = newValueString
