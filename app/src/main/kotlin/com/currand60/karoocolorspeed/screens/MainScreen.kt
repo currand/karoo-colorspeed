@@ -1,7 +1,6 @@
 package com.currand60.karoocolorspeed.screens
 
 
-import android.opengl.ETC1.isValid
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -30,9 +29,11 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -59,15 +60,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-private fun checkConfigData(config: ConfigData): Boolean {
-    return config.stoppedValue <= 0 &&
-        config.speedPercentLevel1 < config.speedPercentLevel2 &&
-        config.speedPercentLevel2 < config.speedPercentMiddleTargetLow &&
-        config.speedPercentMiddleTargetLow < config.speedPercentMiddleTargetHigh &&
-        config.speedPercentMiddleTargetHigh < config.speedPercentLevel4 &&
-        config.speedPercentLevel4 < config.speedPercentLevel5
-}
-
 @Composable
 fun PercentConfigField(
     label: String,
@@ -78,14 +70,10 @@ fun PercentConfigField(
     isError: Boolean,
     errorSupportingText: String? = null,
     prefix: String? = null,
-    compValLow: Int = 0,
-    compValHigh: Int = 1,
 ) {
-    // Local state for the text field's raw string input.
-    // `rememberSaveable` preserves the input across configuration changes (e.g., screen rotation).
+
     var textInput by remember { mutableStateOf(initialValue.toString()) }
 
-    // Update textInput if initialValue changes externally (e.g., if parent updates currentConfig)
     LaunchedEffect(initialValue) {
         if (textInput != initialValue.toString()) {
             textInput = initialValue.toString()
@@ -97,7 +85,7 @@ fun PercentConfigField(
         onValueChange = { newValue ->
             textInput = newValue // Always update the local string state
             val parsedValue = newValue.toIntOrNull() // Attempt to parse to Int
-            val isValid = parsedValue != null && compValLow < compValHigh // Check if parsing was successful
+            val isValid = parsedValue != null
             onValueParsed(newValue, parsedValue, isValid) // Notify the parent
         },
         label = { Text(text = label) },
@@ -124,28 +112,21 @@ fun MainScreen() {
     val coroutineScope = rememberCoroutineScope()
     val karooSystem = KarooSystemService(context)
 
-    var fieldHasChanges by remember { mutableStateOf(false) }
-
     val scrollState = rememberScrollState()
     val isScrolledToBottom = scrollState.value == scrollState.maxValue
 
     var originalConfig by remember { mutableStateOf(ConfigData.DEFAULT) }
     var currentConfig by remember { mutableStateOf(ConfigData.DEFAULT) }
 
-    var stoppedInput by remember { mutableStateOf(currentConfig.stoppedValue.toString()) }
     var stoppedError by remember { mutableStateOf(false) }
-    var speedPercent1Input by remember { mutableStateOf(currentConfig.speedPercentLevel1.toString()) }
     var speedPercent1Error by remember { mutableStateOf(false) }
-    var speedPercent2Input by remember { mutableStateOf(currentConfig.speedPercentLevel2.toString()) }
     var speedPercent2Error by remember { mutableStateOf(false) }
-    var speedPercentTargetLowInput by remember { mutableStateOf(currentConfig.speedPercentMiddleTargetLow.toString()) }
     var speedPercentTargetLowError by remember { mutableStateOf(false) }
-    var speedPercentTargetHighInput by remember { mutableStateOf(currentConfig.speedPercentMiddleTargetHigh.toString()) }
     var speedPercentTargetHighError by remember { mutableStateOf(false) }
-    var speedPercent4Input by remember { mutableStateOf(currentConfig.speedPercentLevel4.toString()) }
     var speedPercent4Error by remember { mutableStateOf(false) }
-    var speedPercent5Input by remember { mutableStateOf(currentConfig.speedPercentLevel5.toString()) }
     var speedPercent5Error by remember { mutableStateOf(false) }
+    
+    var useTargetSpeed by remember { mutableStateOf(false) }
 
     val loadedConfig by produceState(initialValue = ConfigData.DEFAULT, key1 = configManager) {
         Timber.d("Starting to load initial config via produceState.")
@@ -160,6 +141,17 @@ fun MainScreen() {
             .collect { profile ->
                 value = profile.preferredUnit.distance
             }
+    }
+
+    val configIsGood by remember (currentConfig) {
+        derivedStateOf {
+            currentConfig.validate()
+        }
+    }
+
+    LaunchedEffect(loadedConfig) {
+        originalConfig = loadedConfig
+        currentConfig = loadedConfig
     }
 
     Box(
@@ -206,8 +198,13 @@ fun MainScreen() {
                     onValueParsed = { newValueString, parsedValue, isValid ->
                         stoppedError = !isValid
                         if (isValid && parsedValue != null) {
-                            currentConfig = currentConfig.copy(stoppedValue = parsedValue)
+                            val attemptedConfig = currentConfig.copy(stoppedValue = parsedValue)
+                            if (attemptedConfig.validate()) {
+                                currentConfig = currentConfig.copy(stoppedValue = parsedValue)
+                        } else {
+                            stoppedError = true
                         }
+                            }
                     },
                     modifier = Modifier
                         .weight(0.8f)
@@ -232,10 +229,14 @@ fun MainScreen() {
                     prefix = "<",
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
-                        speedPercent1Input = newValueString
                         speedPercent1Error = !isValid
                         if (isValid && parsedValue != null) {
-                            currentConfig = currentConfig.copy(speedPercentLevel1 = parsedValue)
+                            val attemptedConfig = currentConfig.copy(speedPercentLevel1 = parsedValue)
+                            if (attemptedConfig.validate()) {
+                                currentConfig = currentConfig.copy(speedPercentLevel1 = parsedValue)
+                            } else {
+                                speedPercent1Error = true
+                            }
                         }
                     },
                     modifier = Modifier
@@ -243,8 +244,6 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent1Error,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = if (!speedPercent1Error) speedPercent1Input.toInt() else 0,
-                    compValHigh = currentConfig.speedPercentLevel2
                 )
             }
             Row(
@@ -262,10 +261,14 @@ fun MainScreen() {
                     initialValue = currentConfig.speedPercentLevel2,
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
-                        speedPercent2Input = newValueString
                         speedPercent2Error = !isValid
                         if (isValid && parsedValue != null) {
-                            currentConfig = currentConfig.copy(speedPercentLevel2 = parsedValue)
+                            val attemptedConfig = currentConfig.copy(speedPercentLevel2 = parsedValue)
+                            if (attemptedConfig.validate()) {
+                                currentConfig = currentConfig.copy(speedPercentLevel2 = parsedValue)
+                            } else {
+                                speedPercent2Error = true
+                            }
                         }
                     },
                     modifier = Modifier
@@ -273,8 +276,6 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent2Error,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = if (!speedPercent2Error) speedPercent2Input.toInt() else 0,
-                    compValHigh = currentConfig.speedPercentMiddleTargetLow
                 )
             }
             Row(
@@ -292,10 +293,14 @@ fun MainScreen() {
                     initialValue = currentConfig.speedPercentMiddleTargetLow,
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
-                        speedPercentTargetLowInput = newValueString
                         speedPercentTargetLowError = !isValid
                         if (isValid && parsedValue != null) {
-                            currentConfig = currentConfig.copy(speedPercentMiddleTargetLow = parsedValue)
+                            val attemptedConfig = currentConfig.copy(speedPercentMiddleTargetLow = parsedValue)
+                            if (attemptedConfig.validate()) {
+                                currentConfig = currentConfig.copy(speedPercentMiddleTargetLow = parsedValue)
+                            } else {
+                                speedPercentTargetLowError = true
+                            }
                         }
                     },
                     modifier = Modifier
@@ -303,18 +308,20 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercentTargetLowError,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = if (!speedPercentTargetLowError) speedPercentTargetLowInput.toInt() else 0,
-                    compValHigh = currentConfig.speedPercentMiddleTargetHigh
                 )
                 PercentConfigField(
                     label = "Target high",
                     initialValue = currentConfig.speedPercentMiddleTargetHigh,
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
-                        speedPercentTargetHighInput = newValueString
                         speedPercentTargetHighError = !isValid
                         if (isValid && parsedValue != null) {
-                            currentConfig = currentConfig.copy(speedPercentMiddleTargetHigh = parsedValue)
+                            val attemptedConfig = currentConfig.copy(speedPercentMiddleTargetHigh = parsedValue)
+                            if (attemptedConfig.validate()) {
+                                currentConfig = currentConfig.copy(speedPercentMiddleTargetHigh = parsedValue)
+                            } else {
+                                speedPercentTargetHighError = true
+                            }
                         }
                     },
                     modifier = Modifier
@@ -322,8 +329,6 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercentTargetHighError,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = if (!speedPercentTargetHighError) speedPercentTargetHighInput.toInt() else 0,
-                    compValHigh = currentConfig.speedPercentLevel4
                 )
             }
             Row(
@@ -341,10 +346,14 @@ fun MainScreen() {
                     initialValue = currentConfig.speedPercentLevel4,
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
-                        speedPercent4Input = newValueString
                         speedPercent4Error = !isValid
                         if (isValid && parsedValue != null) {
-                            currentConfig = currentConfig.copy(speedPercentLevel4 = parsedValue)
+                            val attemptedConfig = currentConfig.copy(speedPercentLevel4 = parsedValue)
+                            if (attemptedConfig.validate()) {
+                                currentConfig = currentConfig.copy(speedPercentLevel4 = parsedValue)
+                            } else {
+                                speedPercent4Error = true
+                            }
                         }
                     },
                     modifier = Modifier
@@ -352,8 +361,6 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent4Error,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = if (!speedPercent4Error) speedPercent4Input.toInt() else 0,
-                    compValHigh = currentConfig.speedPercentLevel5
                 )
             }
             Row(
@@ -372,10 +379,14 @@ fun MainScreen() {
                     prefix = ">",
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
-                        speedPercent5Input = newValueString
                         speedPercent5Error = !isValid
                         if (isValid && parsedValue != null) {
-                            currentConfig = currentConfig.copy(speedPercentLevel5 = parsedValue)
+                            val attemptedConfig = currentConfig.copy(speedPercentLevel5 = parsedValue)
+                            if (attemptedConfig.validate()) {
+                                currentConfig = currentConfig.copy(speedPercentLevel5 = parsedValue)
+                            } else {
+                                speedPercent5Error = true
+                            }
                         }
                     },
                     modifier = Modifier
@@ -383,10 +394,76 @@ fun MainScreen() {
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent5Error,
                     errorSupportingText = "Please enter a valid number below the next highest level",
-                    compValLow = currentConfig.speedPercentLevel4,
-                    compValHigh = currentConfig.speedPercentLevel5
                 )
             }
+            Row(modifier = Modifier.fillMaxHeight(),
+                verticalAlignment = Alignment.CenterVertically
+            )
+            {
+                Switch(
+                    checked = currentConfig.useArrows,
+                    onCheckedChange = { isChecked ->
+                        currentConfig = currentConfig.copy(useArrows = isChecked)
+                    }
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 5.dp)
+                        .align(Alignment.CenterVertically),
+                    text = "Display arrows next to the speed values?",
+                )
+            }
+            Row(modifier = Modifier.fillMaxHeight(),
+                verticalAlignment = Alignment.CenterVertically
+            )
+            {
+                Switch(
+                    checked = currentConfig.useBackgroundColors,
+                    onCheckedChange = { isChecked ->
+                        currentConfig = currentConfig.copy(useBackgroundColors = isChecked)
+                    }
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 5.dp)
+                        .align(Alignment.CenterVertically),
+                    text = "Change background colors based on speed?",
+                )
+            }
+            Row(modifier = Modifier.fillMaxHeight(),
+                verticalAlignment = Alignment.CenterVertically
+            )
+            {
+                Switch(
+                    checked = currentConfig.useTargetSpeed,
+                    onCheckedChange = { isChecked ->
+                        useTargetSpeed = isChecked
+                        currentConfig = currentConfig.copy(useTargetSpeed = !isChecked)
+                    }
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 5.dp)
+                        .align(Alignment.CenterVertically),
+                    text = "Use a target speed instead of the average speed?",
+                )
+            }
+            OutlinedTextField(
+                value = currentConfig.targetSpeed.toString(),
+                onValueChange = { newValue ->
+                    val parsedValue = newValue.toIntOrNull()
+                    if (parsedValue != null && parsedValue >= 0) {
+                        currentConfig = currentConfig.copy(targetSpeed = parsedValue)
+                    }
+                },
+                label = { Text("Target Speed") },
+                placeholder = { Text(currentConfig.targetSpeed.toString()) },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                enabled = useTargetSpeed
+            )
+
+
             // Save Button
             FilledTonalButton(
                 modifier = Modifier
@@ -396,7 +473,7 @@ fun MainScreen() {
                 onClick = {
                     val configToSave = currentConfig
 
-                    if (checkConfigData(configToSave)) {
+                    if (currentConfig.validate()) {
                         coroutineScope.launch {
                             Timber.d("Attempting to save config: $configToSave")
                             configManager.saveConfig(configToSave)
@@ -406,7 +483,7 @@ fun MainScreen() {
                         Timber.w("Save blocked due to input validation errors.")
                     }
                 },
-                enabled = checkConfigData(currentConfig)
+                enabled = configIsGood && currentConfig != originalConfig
             ) {
                 Icon(Icons.Default.Check, contentDescription = "Save")
                 Spacer(modifier = Modifier.width(5.dp))

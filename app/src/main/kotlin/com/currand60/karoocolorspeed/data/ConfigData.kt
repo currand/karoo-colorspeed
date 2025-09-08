@@ -35,4 +35,19 @@ data class ConfigData(
             targetSpeed = 0,
         )
     }
+
+    fun validate(): Boolean {
+        return stoppedValue >= 0 &&
+                speedPercentLevel1 > 0 &&
+                speedPercentLevel2 > 0 &&
+                speedPercentMiddleTargetLow > 0 &&
+                speedPercentMiddleTargetHigh > 0 &&
+                speedPercentLevel4 > 0 &&
+                speedPercentLevel5 > 0 &&
+                speedPercentLevel1 < speedPercentLevel2 &&
+                speedPercentLevel2 < speedPercentMiddleTargetLow &&
+                speedPercentMiddleTargetLow < speedPercentMiddleTargetHigh &&
+                speedPercentMiddleTargetHigh < speedPercentLevel4 &&
+                speedPercentLevel4 < speedPercentLevel5
+    }
 }
