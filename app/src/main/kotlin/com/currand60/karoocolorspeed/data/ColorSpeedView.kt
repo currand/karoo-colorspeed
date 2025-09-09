@@ -1,7 +1,6 @@
 package com.currand60.karoocolorspeed.data
 
-import android.R.attr.description
-import android.R.attr.textColor
+import android.R.attr.contentDescription
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -20,6 +19,7 @@ import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
 import androidx.glance.layout.Row
+import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
@@ -46,6 +46,7 @@ fun ColorSpeedView(
     description: String
 ) {
 
+    val barConfig = SpeedArrows.DEFAULT
 
     val speedPercentageOfAverage: Int = if (currentSpeed > 0 && averageSpeed > 0) {
         ((currentSpeed / averageSpeed) * 100.0).toInt()
@@ -73,6 +74,18 @@ fun ColorSpeedView(
         Pair(Color.Transparent, Color(context.getColor(R.color.text_color)))
     }
 
+    val barLevel: Int = when {
+        currentSpeed <= colorConfig.stoppedValue -> 0
+        speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> 1
+        speedPercentageOfAverage < colorConfig.speedPercentLevel2 -> 2
+        speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> 0
+        speedPercentageOfAverage < colorConfig.speedPercentLevel4 -> 3
+        speedPercentageOfAverage < colorConfig.speedPercentLevel5 -> 4
+        else -> 5
+    }
+
+
+
     val finalTitle: String = if (config.gridSize.first == 60) {
         val titleId = context.resources.getIdentifier(titleResource, "string", context.packageName)
         val title = context.getString(titleId)
@@ -81,6 +94,12 @@ fun ColorSpeedView(
         val titleId = context.resources.getIdentifier("${titleResource}_short", "string", context.packageName)
         val title = context.getString(titleId)
         title.uppercase()
+    }
+
+    val finalTextSize: Float = if (colorConfig.useArrows) {
+        config.textSize.toFloat() - 10f
+    } else {
+        config.textSize.toFloat()
     }
 
     Column(
@@ -119,15 +138,24 @@ fun ColorSpeedView(
                 .defaultWeight()
                 .padding(horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
+            if (colorConfig.useArrows)
+            {
+                ArrowProvider(
+                    context = context,
+                    level = barLevel,
+                    color = textColor
+                )
+
+            }
             Text(
                 modifier = GlanceModifier
-                    .fillMaxWidth(),
+                    .defaultWeight(),
                 text = ((currentSpeed * 10.0).roundToInt() / 10.0).toString(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
-                    fontSize = TextUnit(config.textSize.toFloat(), TextUnitType.Sp),
+                    fontSize = TextUnit(finalTextSize, TextUnitType.Sp),
                     textAlign = alignment,
                     fontFamily = FontFamily.Monospace,
                 )
@@ -260,3 +288,4 @@ fun PreviewNoBackgroundColors() {
         colorConfig = ConfigData.DEFAULT.copy(useBackgroundColors = false)
     )
 }
+
