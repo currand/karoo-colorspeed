@@ -438,7 +438,7 @@ fun MainScreen() {
                     checked = currentConfig.useTargetSpeed,
                     onCheckedChange = { isChecked ->
                         useTargetSpeed = isChecked
-                        currentConfig = currentConfig.copy(useTargetSpeed = !isChecked)
+                        currentConfig = currentConfig.copy(useTargetSpeed = isChecked)
                     }
                 )
                 Text(
