@@ -1,9 +1,5 @@
 package com.currand60.karoocolorspeed.data
 
-import com.currand60.karoocolorspeed.R
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class ConfigData(
     val useBackgroundColors: Boolean,
     val useArrows: Boolean,
@@ -50,23 +46,5 @@ data class ConfigData(
                 speedPercentMiddleTargetLow < speedPercentMiddleTargetHigh &&
                 speedPercentMiddleTargetHigh < speedPercentLevel4 &&
                 speedPercentLevel4 < speedPercentLevel5
-    }
-}
-
-data class SpeedArrows(
-    val level1: Pair<Int, Int>,
-    val level2: Pair<Int, Int>,
-    val target: Pair<Int, Int>,
-    val level3: Pair<Int, Int>,
-    val level4: Pair<Int, Int>,
-){
-    companion object {
-        val DEFAULT = SpeedArrows(
-            level1 = Pair(R.drawable.stat_minus_2_24px, R.color.text_color),
-            level2 = Pair(R.drawable.stat_minus_1_24px, R.color.text_color),
-            target = Pair(R.drawable.stat_0_24px, R.color.text_color),
-            level3 = Pair(R.drawable.stat_1_24px, R.color.text_color),
-            level4 = Pair(R.drawable.stat_2_24px, R.color.text_color),
-        )
     }
 }

@@ -2,7 +2,6 @@ package com.currand60.karoocolorspeed.data
 
 import android.annotation.SuppressLint
 import com.currand60.karoocolorspeed.R
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -11,30 +10,21 @@ import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
-import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
-import androidx.glance.layout.fillMaxHeight
-import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.width
-import androidx.glance.layout.wrapContentSize
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.unit.ColorProvider
-import io.hammerhead.karooext.models.ViewConfig
 
 
 @SuppressLint("RestrictedApi")
 @Composable
 fun ArrowProvider (
-    context: Context,
     level: Int,
     color: Color
 ){
-    val barConfig = SpeedArrows.DEFAULT
-
     val arrowModifier = GlanceModifier.width(28.dp).height(48.dp)
     val barModifier = GlanceModifier.width(28.dp).height(48.dp).padding(1.dp)
 
@@ -53,7 +43,7 @@ fun ArrowProvider (
             Image(
                 modifier = arrowModifier,
                 provider = ImageProvider(
-                    resId = barConfig.level1.first,
+                    resId = R.drawable.stat_minus_2_24px,
                 ),
                 contentDescription = "Target",
                 contentScale = ContentScale.Crop,
@@ -63,7 +53,7 @@ fun ArrowProvider (
             Image(
                 modifier = arrowModifier,
                 provider = ImageProvider(
-                    resId = barConfig.level2.first,
+                    resId = R.drawable.stat_minus_1_24px,
                 ),
                 contentDescription = "Target",
                 contentScale = ContentScale.Crop,
@@ -73,7 +63,7 @@ fun ArrowProvider (
             Image(
                 modifier = arrowModifier,
                 provider = ImageProvider(
-                    resId = barConfig.level3.first,
+                    resId = R.drawable.stat_1_24px,
                 ),
                 contentDescription = "Target",
                 contentScale = ContentScale.Crop,
@@ -84,7 +74,7 @@ fun ArrowProvider (
             Image(
                 modifier = arrowModifier,
                 provider = ImageProvider(
-                    resId = barConfig.level4.first,
+                    resId = R.drawable.stat_2_24px,
                 ),
                 contentDescription = "Target",
                 contentScale = ContentScale.Crop,
@@ -101,7 +91,7 @@ fun ArrowProvider (
 fun PreviewBarsTarget(){
     val context = LocalContext.current
 
-    ArrowProvider(context = context,
+    ArrowProvider(
         level = 0,
         color = Color(context.getColor(R.color.white))
     )
@@ -113,7 +103,7 @@ fun PreviewBarsTarget(){
 @Composable
 fun PreviewBars1(){
     val context = LocalContext.current
-    ArrowProvider(context = context,
+    ArrowProvider(
         level = 1,
         color = Color(context.getColor(R.color.black))
 
