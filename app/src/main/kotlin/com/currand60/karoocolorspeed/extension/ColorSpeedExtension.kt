@@ -3,7 +3,9 @@ package com.currand60.karoocolorspeed.extension
 import com.currand60.karoocolorspeed.BuildConfig
 import com.currand60.karoocolorspeed.data.AvgColorSpeed
 import com.currand60.karoocolorspeed.data.CurrentColorSpeed
+import com.currand60.karoocolorspeed.data.LapVsTargetColorSpeed
 import com.currand60.karoocolorspeed.data.LapsColorSpeed
+import com.currand60.karoocolorspeed.data.SpeedVsTargetColorSpeed
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.KarooExtension
 import javax.inject.Inject
@@ -28,7 +30,9 @@ class ColorSpeedExtension : KarooExtension("karoocolorspeed", BuildConfig.VERSIO
         listOf(
             CurrentColorSpeed(karooSystem, extension),
             LapsColorSpeed(karooSystem, extension),
-            AvgColorSpeed(karooSystem, extension)
+            AvgColorSpeed(karooSystem, extension),
+            SpeedVsTargetColorSpeed(karooSystem, extension),
+            LapVsTargetColorSpeed(karooSystem, extension)
         )
     }
 

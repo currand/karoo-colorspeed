@@ -10,5 +10,10 @@
     <string name="lap_speed_title">Current vs. last lap</string>
     <string name="lap_speed_title_short">Lap vs. LL</string>
     <string name="lap_speed_description">Current lap speed vs. last lap average</string>
-
+    <string name="speed_vs_target_title">Current vs. target</string>
+    <string name="speed_vs_target_title_short">Speed vs. target</string>
+    <string name="speed_vs_target_description">Current speed vs. target speed</string>
+    <string name="lap_vs_target_title">Lap vs. target</string>
+    <string name="lap_vs_target_title_short">Lap vs. target</string>
+    <string name="lap_vs_target_description">Current lap speed vs. target speed</string>
 </resources>

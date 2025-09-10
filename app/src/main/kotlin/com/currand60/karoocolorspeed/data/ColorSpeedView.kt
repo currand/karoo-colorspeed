@@ -41,8 +41,11 @@ fun ColorSpeedView(
     config: ViewConfig,
     colorConfig: ConfigData,
     titleResource: String,
-    description: String
+    description: String,
+    speedUnits: Double,
 ) {
+
+
 
     val speedPercentageOfAverage: Int = if (currentSpeed > 0 && averageSpeed > 0) {
         ((currentSpeed / averageSpeed) * 100.0).toInt()
@@ -58,7 +61,7 @@ fun ColorSpeedView(
 
     val (backgroundColor, textColor) = if (colorConfig.useBackgroundColors) {
         when {
-            currentSpeed <= colorConfig.stoppedValue -> Pair(
+            currentSpeed <= colorConfig.stoppedValue.times(speedUnits) -> Pair(
                 Color.Transparent,
                 Color(context.getColor(R.color.text_color))
             )
@@ -110,7 +113,7 @@ fun ColorSpeedView(
     }
 
     val barLevel: Int = when {
-        currentSpeed <= colorConfig.stoppedValue -> 0
+        currentSpeed <= colorConfig.stoppedValue.times(speedUnits) -> 0
         speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> 1
         speedPercentageOfAverage < colorConfig.speedPercentLevel2 -> 2
         speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> 0
@@ -214,7 +217,8 @@ fun PreviewColorSpeedUnder10() {
             viewSize = Pair(238, 148),
             preview = true
         ),
-        colorConfig = ConfigData.DEFAULT
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
     )
 }
 
@@ -235,7 +239,8 @@ fun PreviewColorSpeedUnder() {
             viewSize = Pair(238, 148),
             preview = true
         ),
-        colorConfig = ConfigData.DEFAULT
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
     )
 }
 
@@ -256,7 +261,8 @@ fun PreviewColorSpeedOrange() {
             viewSize = Pair(478, 214),
             preview = true
         ),
-        colorConfig = ConfigData.DEFAULT
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
     )
 }
 
@@ -277,7 +283,8 @@ fun PreviewColorSpeedSteady() {
             viewSize = Pair(478, 214),
             preview = true,
         ),
-        colorConfig = ConfigData.DEFAULT
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
     )
 }
 
@@ -298,7 +305,8 @@ fun PreviewColorSpeedOver() {
             viewSize = Pair(238, 148),
             preview = true
         ),
-        colorConfig = ConfigData.DEFAULT
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
     )
 }
 
@@ -319,7 +327,8 @@ fun PreviewNoBackgroundColors() {
             viewSize = Pair(238, 148),
             preview = true
         ),
-        colorConfig = ConfigData.DEFAULT.copy(useBackgroundColors = false)
+        colorConfig = ConfigData.DEFAULT.copy(useBackgroundColors = false),
+        speedUnits = 2.23694
     )
 }
 

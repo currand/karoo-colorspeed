@@ -72,14 +72,14 @@ class AvgColorSpeed(
         }
         val viewJob = dataScope.launch {
             val colorConfig = ConfigurationManager(context).getConfigFlow().first()
-            val userProfileFlow = karooSystem.streamUserProfile()
+            val userProfileState = karooSystem.streamUserProfile().first()
+            val speedUnits = when(userProfileState.preferredUnit.distance) {
+                UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694
+                else -> 3.6
+            }
             val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.SPEED) else previewFlow()
             val averageSpeedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAST_LAP) else previewFlow(10.0)
-            combine(speedFlow, averageSpeedFlow, userProfileFlow) { speedState, averageSpeedState, userProfileState ->
-                val speedUnits = when(userProfileState.preferredUnit.distance) {
-                    UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694
-                    else -> 3.6
-                }
+            combine(speedFlow, averageSpeedFlow ) { speedState, averageSpeedState ->
                 if (speedState is StreamState.Streaming && averageSpeedState is StreamState.Streaming) {
                     Pair(
                         speedState.dataPoint.singleValue!! * speedUnits,
@@ -89,7 +89,8 @@ class AvgColorSpeed(
                     Pair(0.0, 0.0)
                 }
             }.onEach {
-                Timber.d("$TYPE_ID ${it.first}, average: ${it.second}")                    }.collect {
+                Timber.d("$TYPE_ID ${it.first}, average: ${it.second}")
+            }.collect {
                 val result = glance.compose(context, DpSize.Unspecified) {
                     ColorSpeedView(
                         context,
@@ -98,7 +99,8 @@ class AvgColorSpeed(
                         config,
                         colorConfig,
                         "avg_speed_title",
-                        context.getString(R.string.avg_speed_description)
+                        context.getString(R.string.avg_speed_description),
+                        speedUnits
                     )
                 }
                 emitter.updateView(result.remoteViews)

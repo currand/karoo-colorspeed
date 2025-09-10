@@ -3,15 +3,14 @@ package com.currand60.karoocolorspeed.data
 data class ConfigData(
     val useBackgroundColors: Boolean,
     val useArrows: Boolean,
-    val useTargetSpeed: Boolean,
-    val stoppedValue: Int,
+    val stoppedValue: Double,
     val speedPercentLevel1: Int,
     val speedPercentLevel2: Int,
     val speedPercentMiddleTargetLow: Int,
     val speedPercentMiddleTargetHigh: Int,
     val speedPercentLevel4: Int,
     val speedPercentLevel5: Int,
-    val targetSpeed: Int,
+    val targetSpeed: Double,
 ) {
     companion object {
         /**
@@ -21,20 +20,20 @@ data class ConfigData(
         val DEFAULT = ConfigData(
             useBackgroundColors = true,
             useArrows = true,
-            useTargetSpeed = false,
-            stoppedValue = 2,
+            stoppedValue = 0.9,
             speedPercentLevel1 = 50,
             speedPercentLevel2 = 65,
             speedPercentMiddleTargetLow = 95,
             speedPercentMiddleTargetHigh = 105,
             speedPercentLevel4 = 110,
             speedPercentLevel5 = 120,
-            targetSpeed = 0,
+            targetSpeed = 8.94,
         )
     }
 
     fun validate(): Boolean {
         return stoppedValue >= 0 &&
+                targetSpeed >= 0 &&
                 speedPercentLevel1 > 0 &&
                 speedPercentLevel2 > 0 &&
                 speedPercentMiddleTargetLow > 0 &&

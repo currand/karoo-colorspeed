@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -24,15 +25,14 @@ class ConfigurationManager (
     companion object {
         private val USE_BG_COLOR_KEY = booleanPreferencesKey("useBackgroundColors")
         private val USE_ARROWS_KEY = booleanPreferencesKey("useArrows")
-        private val USE_TARGET_SPEED_KEY = booleanPreferencesKey("useTargetSpeed")
-        private val STOPPED_VALUE_KEY = intPreferencesKey("stoppedValue")
+        private val STOPPED_VALUE_KEY = doublePreferencesKey("stoppedValue")
         private val SPEED_PERCENT_LEVEL1_KEY = intPreferencesKey("speedPercentLevel1")
         private val SPEED_PERCENT_LEVEL2_KEY = intPreferencesKey("speedPercentLevel2")
         private val SPEED_PERCENT_MIDDLE_TARGET_LOW_KEY = intPreferencesKey("speedPercentMiddleTargetLow")
         private val SPEED_PERCENT_MIDDLE_TARGET_HIGH_KEY = intPreferencesKey("speedPercentMiddleTargetHigh")
         private val SPEED_PERCENT_LEVEL4_KEY = intPreferencesKey("speedPercentLevel4")
         private val SPEED_PERCENT_LEVEL5_KEY = intPreferencesKey("speedPercentLevel5")
-        private val TARGET_SPEED_KEY = intPreferencesKey("targetSpeed")
+        private val TARGET_SPEED_KEY = doublePreferencesKey("targetSpeed")
 
     }
 
@@ -41,7 +41,6 @@ class ConfigurationManager (
         context.dataStore.edit { preferences ->
             preferences[USE_BG_COLOR_KEY] = config.useBackgroundColors
             preferences[USE_ARROWS_KEY] = config.useArrows
-            preferences[USE_TARGET_SPEED_KEY] = config.useTargetSpeed
             preferences[STOPPED_VALUE_KEY] = config.stoppedValue
             preferences[SPEED_PERCENT_LEVEL1_KEY] = config.speedPercentLevel1
             preferences[SPEED_PERCENT_LEVEL2_KEY] = config.speedPercentLevel2
@@ -62,7 +61,6 @@ class ConfigurationManager (
             val config = ConfigData(
                 useBackgroundColors = preferences[USE_BG_COLOR_KEY] ?: ConfigData.DEFAULT.useBackgroundColors,
                 useArrows = preferences[USE_ARROWS_KEY] ?: ConfigData.DEFAULT.useArrows,
-                useTargetSpeed = preferences[USE_TARGET_SPEED_KEY] ?: ConfigData.DEFAULT.useTargetSpeed,
                 stoppedValue = preferences[STOPPED_VALUE_KEY] ?: ConfigData.DEFAULT.stoppedValue,
                 speedPercentLevel1 = preferences[SPEED_PERCENT_LEVEL1_KEY] ?: ConfigData.DEFAULT.speedPercentLevel1,
                 speedPercentLevel2 = preferences[SPEED_PERCENT_LEVEL2_KEY] ?: ConfigData.DEFAULT.speedPercentLevel2,
@@ -82,7 +80,6 @@ class ConfigurationManager (
             ConfigData(
                 useBackgroundColors = preferences[USE_BG_COLOR_KEY] ?: ConfigData.DEFAULT.useBackgroundColors,
                 useArrows = preferences[USE_ARROWS_KEY] ?: ConfigData.DEFAULT.useArrows,
-                useTargetSpeed = preferences[USE_TARGET_SPEED_KEY] ?: ConfigData.DEFAULT.useTargetSpeed,
                 stoppedValue = preferences[STOPPED_VALUE_KEY] ?: ConfigData.DEFAULT.stoppedValue,
                 speedPercentLevel1 = preferences[SPEED_PERCENT_LEVEL1_KEY] ?: ConfigData.DEFAULT.speedPercentLevel1,
                 speedPercentLevel2 = preferences[SPEED_PERCENT_LEVEL2_KEY] ?: ConfigData.DEFAULT.speedPercentLevel2,
