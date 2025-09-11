@@ -25,8 +25,8 @@ fun ArrowProvider (
     level: Int,
     color: Color
 ){
-    val arrowModifier = GlanceModifier.width(28.dp).height(48.dp)
-    val barModifier = GlanceModifier.width(28.dp).height(48.dp).padding(1.dp)
+    val arrowModifier = GlanceModifier.width(28.dp).height(36.dp)
+    val barModifier = GlanceModifier.width(28.dp).height(36.dp).padding(1.dp)
 
     when (level) {
         0 ->
