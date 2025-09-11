@@ -53,11 +53,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.currand60.karoocolorspeed.R
 import com.currand60.karoocolorspeed.data.ConfigData
+import com.currand60.karoocolorspeed.extension.Providers_ProvideKarooSystemFactory.provideKarooSystem
 import com.currand60.karoocolorspeed.extension.streamUserProfile
 import com.currand60.karoocolorspeed.managers.ConfigurationManager
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.models.UserProfile
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.math.roundToInt
@@ -142,11 +142,11 @@ fun MainScreen() {
     }
 
     val karooDistanceUnit by produceState(initialValue = UserProfile.PreferredUnit.UnitType.IMPERIAL, key1 = karooSystem) {
-        Timber.d("Starting to load Karoo FTP via produceState.")
+        Timber.d("Starting to load Karoo distance units via produceState.")
         karooSystem.streamUserProfile()
-            .distinctUntilChanged()
             .collect { profile ->
                 value = profile.preferredUnit.distance
+                Timber.d("Karoo distance units loaded: $value")
             }
     }
 
@@ -156,7 +156,7 @@ fun MainScreen() {
         }
     }
 
-    LaunchedEffect(loadedConfig) {
+    LaunchedEffect(loadedConfig, karooDistanceUnit) {
         speedMultiplier = when(karooDistanceUnit) {
             UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694
             else -> 3.6
@@ -491,7 +491,6 @@ fun MainScreen() {
                     .padding(vertical = 8.dp),
                 onClick = {
                     val configToSave = currentConfig
-
                     if (currentConfig.validate()) {
                         coroutineScope.launch {
                             Timber.d("Attempting to save config: $configToSave")
