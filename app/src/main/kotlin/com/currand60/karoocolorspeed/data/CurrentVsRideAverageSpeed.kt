@@ -21,9 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import com.currand60.karoocolorspeed.R
 import com.currand60.karoocolorspeed.managers.ConfigurationManager
 import io.hammerhead.karooext.models.UserProfile
@@ -68,24 +66,24 @@ class CurrentVsRideAverageSpeed(
         }
         val viewJob = dataScope.launch {
             val colorConfig = ConfigurationManager(context).getConfigFlow().first()
-            val userProfileState = karooSystem.streamUserProfile().first()
-            val speedUnits = when(userProfileState.preferredUnit.distance) {
-                UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694
-                else -> 3.6
-            }
+            val userProfileFlow = karooSystem.streamUserProfile()
             val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.SPEED) else previewFlow()
             val averageSpeedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED) else previewFlow(10.0)
-            combine(speedFlow, averageSpeedFlow, ) { speedState, averageSpeedState ->
+            combine(speedFlow, averageSpeedFlow, userProfileFlow) { speedState, averageSpeedState, userProfileState ->
                 if (speedState is StreamState.Streaming && averageSpeedState is StreamState.Streaming) {
-                    Pair(
+                    val speedUnits = when(userProfileState.preferredUnit.distance) {
+                        UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694
+                        else -> 3.6
+                    }
+                    Triple(
                         speedState.dataPoint.singleValue!! * speedUnits,
-                        averageSpeedState.dataPoint.singleValue!! * speedUnits
+                        averageSpeedState.dataPoint.singleValue!! * speedUnits,
+                        speedUnits
+
                     )
                 } else {
-                    Pair(0.0, 0.0)
+                    Triple(0.0, 0.0, 2.23694)
                 }
-            }.onEach {
-                Timber.d("$TYPE_ID ${it.first}, average: ${it.second}")
             }.collect {
                 val result = glance.compose(context, DpSize.Unspecified) {
                     ColorSpeedView(
@@ -96,7 +94,7 @@ class CurrentVsRideAverageSpeed(
                         colorConfig,
                         "speed_title",
                         context.getString(R.string.extension_description),
-                        speedUnits
+                        it.third
                     )
                 }
                 emitter.updateView(result.remoteViews)
