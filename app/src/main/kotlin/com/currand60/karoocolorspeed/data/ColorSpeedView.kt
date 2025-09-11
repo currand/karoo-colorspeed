@@ -116,9 +116,9 @@ fun ColorSpeedView(
         currentSpeed <= colorConfig.stoppedValue.times(speedUnits) -> 0
         speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> 1
         speedPercentageOfAverage < colorConfig.speedPercentLevel2 -> 2
-        speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> 0
-        speedPercentageOfAverage < colorConfig.speedPercentLevel4 -> 3
-        speedPercentageOfAverage < colorConfig.speedPercentLevel5 -> 4
+        speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> 3
+        speedPercentageOfAverage < colorConfig.speedPercentLevel4 -> 4
+        speedPercentageOfAverage < colorConfig.speedPercentLevel5 -> 5
         else -> 5
     }
 
@@ -135,7 +135,7 @@ fun ColorSpeedView(
     }
 
     val finalTextSize: Float = if (colorConfig.useArrows) {
-        config.textSize.toFloat() - 10f
+        config.textSize.toFloat() - 8f
     } else {
         config.textSize.toFloat()
     }
