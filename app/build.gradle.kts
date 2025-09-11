@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.google.dagger.hilt.android)
     alias(libs.plugins.google.devtools.ksp)
 }
 
@@ -22,8 +21,8 @@ android {
         applicationId = "com.currand60.karoocolorspeed"
         minSdk = 23
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.2-alpha"
+        versionCode = 25091002
+        versionName = "0.3.1-alpha"
         signingConfig = signingConfigs.getByName("debug")
 
     }
@@ -108,8 +107,8 @@ dependencies {
     implementation(libs.androidx.glance.appwidget.preview)
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.javax.inject)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     implementation(libs.timber)
     implementation(libs.kotlinx.coroutines.debug)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 }

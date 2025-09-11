@@ -22,4 +22,16 @@
         displayName="@string/avg_speed_title"
         graphical="true"
         icon="@drawable/icon_gauge" />
+    <DataType
+        typeId="speedvstarget"
+        description="@string/speed_vs_target_description"
+        displayName="@string/speed_vs_target_title"
+        graphical="true"
+        icon="@drawable/icon_gauge" />
+    <DataType
+        typeId="lapvstarget"
+        description="@string/lap_vs_target_description"
+        displayName="@string/lap_vs_target_title"
+        graphical="true"
+        icon="@drawable/icon_gauge" />
 </ExtensionInfo>
