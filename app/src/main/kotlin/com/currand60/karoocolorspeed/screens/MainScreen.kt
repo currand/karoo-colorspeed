@@ -51,14 +51,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.currand60.karoocolorspeed.KarooSystemServiceProvider
 import com.currand60.karoocolorspeed.R
 import com.currand60.karoocolorspeed.data.ConfigData
-import com.currand60.karoocolorspeed.extension.Providers_ProvideKarooSystemFactory.provideKarooSystem
-import com.currand60.karoocolorspeed.extension.streamUserProfile
 import com.currand60.karoocolorspeed.managers.ConfigurationManager
-import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.models.UserProfile
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import timber.log.Timber
 import kotlin.math.roundToInt
 
@@ -114,30 +114,18 @@ fun PercentConfigField(
 fun MainScreen() {
 
     val context = LocalContext.current
-    val configManager = ConfigurationManager(context)
+    val configManager: ConfigurationManager = koinInject()
     val coroutineScope = rememberCoroutineScope()
-    val karooSystem = KarooSystemService(context)
+    val karooSystem: KarooSystemServiceProvider = koinInject()
 
     val scrollState = rememberScrollState()
     val isScrolledToBottom = scrollState.value == scrollState.maxValue
 
-    var originalConfig by remember { mutableStateOf(ConfigData.DEFAULT) }
-    var currentConfig by remember { mutableStateOf(ConfigData.DEFAULT) }
-    var speedMultiplier by remember { mutableDoubleStateOf(2.23694) }
-
-    var stoppedSpeedInput by remember { mutableStateOf(currentConfig.stoppedValue.times(speedMultiplier).roundValue().toString()) }
-    var stoppedError by remember { mutableStateOf(false) }
-    var speedPercent1Error by remember { mutableStateOf(false) }
-    var speedPercent2Error by remember { mutableStateOf(false) }
-    var speedPercentTargetLowError by remember { mutableStateOf(false) }
-    var speedPercentTargetHighError by remember { mutableStateOf(false) }
-    var speedPercent4Error by remember { mutableStateOf(false) }
-    var speedPercent5Error by remember { mutableStateOf(false) }
 
 
     val loadedConfig by produceState(initialValue = ConfigData.DEFAULT, key1 = configManager) {
         Timber.d("Starting to load initial config via produceState.")
-        value = configManager.getConfig()
+        value = configManager.getConfigFlow().first()
         Timber.d("Initial config loaded: $value")
     }
 
@@ -150,11 +138,33 @@ fun MainScreen() {
             }
     }
 
+
+    var originalConfig by remember { mutableStateOf(ConfigData.DEFAULT) }
+    var currentConfig by remember { mutableStateOf(ConfigData.DEFAULT) }
+    var speedPercent1Error by remember { mutableStateOf(false) }
+    var speedPercent2Error by remember { mutableStateOf(false) }
+    var speedPercentTargetLowError by remember { mutableStateOf(false) }
+    var speedPercentTargetHighError by remember { mutableStateOf(false) }
+    var speedPercent4Error by remember { mutableStateOf(false) }
+    var speedPercent5Error by remember { mutableStateOf(false) }
+
+    var speedMultiplier by remember { mutableDoubleStateOf(if (karooDistanceUnit == UserProfile.PreferredUnit.UnitType.IMPERIAL) 2.23694 else 3.6) }
+
     val configIsGood by remember (currentConfig) {
         derivedStateOf {
             currentConfig.validate()
         }
     }
+
+    var stoppedSpeedInput by remember(loadedConfig, speedMultiplier) {
+        mutableStateOf(loadedConfig.stoppedValue.times(speedMultiplier).roundValue().toString())
+    }
+    var stoppedSpeedError by remember { mutableStateOf(false) }
+
+    var targetSpeedInput by remember(loadedConfig, speedMultiplier) {
+        mutableStateOf(loadedConfig.targetSpeed.times(speedMultiplier).roundValue().toString())
+    }
+    var targetSpeedError by remember { mutableStateOf(false) }
 
     LaunchedEffect(loadedConfig, karooDistanceUnit) {
         speedMultiplier = when(karooDistanceUnit) {
@@ -164,9 +174,6 @@ fun MainScreen() {
         originalConfig = loadedConfig
         currentConfig = loadedConfig
     }
-
-    var targetSpeedInput by remember { mutableStateOf(currentConfig.targetSpeed.times(speedMultiplier).roundValue().toString()) }
-    var targetSpeedError by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -208,27 +215,35 @@ fun MainScreen() {
                         val parsedValue = newValue.toDoubleOrNull()
                         if (parsedValue != null) {
                             currentConfig = currentConfig.copy(stoppedValue = parsedValue.div(speedMultiplier).roundValue())
-                            stoppedError = false
+                            stoppedSpeedError = false
                         } else {
-                            stoppedError = true
+                            stoppedSpeedError = true
                         }
                     },
                     modifier = Modifier
                         .weight(0.8f)
                         .padding(start = 5.dp, end = 5.dp),
                     suffix = {
-                        when (karooDistanceUnit) {
-                            UserProfile.PreferredUnit.UnitType.IMPERIAL -> Text("mph")
-                            else -> Text("kmh")
+                        val suffixText = when (karooDistanceUnit) {
+                            UserProfile.PreferredUnit.UnitType.IMPERIAL -> "mph"
+                            else -> "kmh"
                         }
+                        Text(suffixText)
                     },
                     label = { Text("Stopped Speed") },
-                    placeholder = { Text(currentConfig.stoppedValue.times(speedMultiplier).roundValue().toString()) },
+                    placeholder = {
+                        val placeholderText = loadedConfig
+                            .stoppedValue
+                            .times(speedMultiplier)
+                            .roundValue()
+                            .toString()
+                        Text(placeholderText)
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
-                    isError = stoppedError,
+                    isError = stoppedSpeedError,
                     supportingText = {
-                        if (stoppedError) Text("Please enter a valid number")
+                        if (stoppedSpeedError) Text("Please enter a valid number")
                     }
                 )
             }
@@ -466,18 +481,26 @@ fun MainScreen() {
                         }
                     },
                     suffix = {
-                        when (karooDistanceUnit) {
-                            UserProfile.PreferredUnit.UnitType.IMPERIAL -> Text("mph")
-                            else -> Text("kmh")
+                        val suffixText = when (karooDistanceUnit) {
+                            UserProfile.PreferredUnit.UnitType.IMPERIAL -> "mph"
+                            else -> "kmh"
                         }
+                        Text(suffixText)
                     },
                     label = { Text("Target Speed") },
-                    placeholder = { Text(currentConfig.targetSpeed.times(speedMultiplier).roundValue().toString()) },
+                    placeholder = {
+                        val placeholderText = loadedConfig
+                            .targetSpeed
+                            .times(speedMultiplier)
+                            .roundValue()
+                            .toString()
+                        Text(placeholderText)
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     isError = targetSpeedError,
                     supportingText = {
-                        if (stoppedError) Text("Please enter a valid number")
+                        if (stoppedSpeedError) Text("Please enter a valid number")
                     }
                 )
             }

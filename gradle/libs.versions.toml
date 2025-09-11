@@ -4,7 +4,6 @@ kotlin = "2.2.10"
 datastorePreferences = "1.1.7"
 kotlinxCoroutinesDebug = "1.10.2"
 navigationRuntimeAndroid = "2.9.3"
-hilt = "2.57.1"
 javaxInject = "1"
 androidxCore = "1.17.0"
 androidxLifecycle = "2.9.2"
@@ -13,12 +12,13 @@ androidxComposeUi = "1.9.0"
 androidxComposeMaterial = "1.3.2"
 glance = "1.1.1"
 timber = "5.0.1"
+koin-bom = "4.1.0"
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
 
 
@@ -28,6 +28,8 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInject" }
 kotlinx-coroutines-debug = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-debug", version.ref = "kotlinxCoroutinesDebug" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-bom" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin-bom" }
 
 # compose
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
@@ -38,10 +40,6 @@ androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "androi
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androidxComposeUi" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidxComposeUi" }
 androidx-compose-material = { module = "androidx.compose.material3:material3", version.ref = "androidxComposeMaterial" }
-
-# hilt
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 
 # Glance
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }

@@ -1,5 +1,6 @@
 package com.currand60.karoocolorspeed.extension
 
+import com.currand60.karoocolorspeed.KarooSystemServiceProvider
 import com.currand60.karoocolorspeed.BuildConfig
 import com.currand60.karoocolorspeed.data.AvgColorSpeed
 import com.currand60.karoocolorspeed.data.CurrentColorSpeed
@@ -8,8 +9,6 @@ import com.currand60.karoocolorspeed.data.LapsColorSpeed
 import com.currand60.karoocolorspeed.data.SpeedVsTargetColorSpeed
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.KarooExtension
-import javax.inject.Inject
-import dagger.hilt.android.AndroidEntryPoint
 import io.hammerhead.karooext.models.OnStreamState
 import io.hammerhead.karooext.models.StreamState
 import io.hammerhead.karooext.models.UserProfile
@@ -17,14 +16,15 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import org.koin.android.ext.android.inject
 import timber.log.Timber
+import kotlin.getValue
 
 
-@AndroidEntryPoint
 class ColorSpeedExtension : KarooExtension("karoocolorspeed", BuildConfig.VERSION_NAME) {
 
-    @Inject
-    lateinit var karooSystem: KarooSystemService
+    private val karooSystem: KarooSystemServiceProvider by inject()
+
 
     override val types by lazy {
         listOf(
@@ -38,14 +38,14 @@ class ColorSpeedExtension : KarooExtension("karoocolorspeed", BuildConfig.VERSIO
 
     override fun onCreate() {
         super.onCreate()
-        karooSystem.connect { connected ->
+        karooSystem.karooSystemService.connect { connected ->
             Timber.d("Karoo connected: $connected")
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        karooSystem.disconnect()
+        karooSystem.karooSystemService.disconnect()
         Timber.d("Karoo disconnected")
     }
 }

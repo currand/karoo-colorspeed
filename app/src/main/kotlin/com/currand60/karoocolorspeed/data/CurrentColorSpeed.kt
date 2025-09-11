@@ -4,8 +4,7 @@ import android.content.Context
 import androidx.compose.ui.unit.DpSize
 import androidx.glance.appwidget.ExperimentalGlanceRemoteViewsApi
 import androidx.glance.appwidget.GlanceRemoteViews
-import com.currand60.karoocolorspeed.extension.streamDataFlow
-import io.hammerhead.karooext.KarooSystemService
+import com.currand60.karoocolorspeed.KarooSystemServiceProvider
 import io.hammerhead.karooext.extension.DataTypeImpl
 import io.hammerhead.karooext.internal.ViewEmitter
 import io.hammerhead.karooext.models.DataPoint
@@ -33,7 +32,7 @@ import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
 class CurrentColorSpeed(
-    private val karooSystem: KarooSystemService,
+    private val karooSystem: KarooSystemServiceProvider,
     extension: String
 ) : DataTypeImpl(extension, TYPE_ID) {
 
