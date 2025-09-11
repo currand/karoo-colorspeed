@@ -33,11 +33,11 @@ fun ArrowProvider (
             Image(
                 modifier = barModifier,
                 provider = ImageProvider(
-                    resId = R.drawable.stat_0_24px,
+                    resId = R.drawable.check_indeterminate_small_24px,
                 ),
                 contentDescription = "Target",
                 contentScale = ContentScale.Crop,
-                colorFilter = ColorFilter.tint(ColorProvider(color))
+                colorFilter = ColorFilter.tint(ColorProvider(Color.Transparent))
             )
         1 ->
             Image(
@@ -63,14 +63,24 @@ fun ArrowProvider (
             Image(
                 modifier = arrowModifier,
                 provider = ImageProvider(
-                    resId = R.drawable.stat_1_24px,
+                    resId = R.drawable.stat_0_24px,
                 ),
                 contentDescription = "Target",
                 contentScale = ContentScale.Crop,
                 colorFilter = ColorFilter.tint(ColorProvider(color))
             )
 
-        in (4..5) ->
+        4 ->
+            Image(
+                modifier = arrowModifier,
+                provider = ImageProvider(
+                    resId = R.drawable.stat_1_24px,
+                ),
+                contentDescription = "Target",
+                contentScale = ContentScale.Crop,
+                colorFilter = ColorFilter.tint(ColorProvider(color))
+            )
+        5 ->
             Image(
                 modifier = arrowModifier,
                 provider = ImageProvider(
@@ -105,6 +115,19 @@ fun PreviewBars1(){
     val context = LocalContext.current
     ArrowProvider(
         level = 1,
+        color = Color(context.getColor(R.color.black))
+
+    )
+}
+
+@SuppressLint("RestrictedApi")
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 150, heightDp = 90)
+@Composable
+fun PreviewBars3(){
+    val context = LocalContext.current
+    ArrowProvider(
+        level = 3,
         color = Color(context.getColor(R.color.black))
 
     )
