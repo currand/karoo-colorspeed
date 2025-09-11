@@ -70,7 +70,7 @@ class SpeedVsTargetColorSpeed(
                 UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694
                 else -> 3.6
             }
-            val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAP) else previewFlow()
+            val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.SPEED) else previewFlow()
             speedFlow.collect { streamState ->
                 when (streamState) {
                     is StreamState.Streaming -> {

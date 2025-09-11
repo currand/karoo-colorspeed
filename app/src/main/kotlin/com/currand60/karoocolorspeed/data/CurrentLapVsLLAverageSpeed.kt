@@ -31,7 +31,7 @@ import timber.log.Timber
 
 
 @OptIn(ExperimentalGlanceRemoteViewsApi::class)
-class LapsColorSpeed(
+class CurrentLapVsLLAverageSpeed(
     private val karooSystem: KarooSystemServiceProvider,
     extension: String,
 ) : DataTypeImpl(extension, TYPE_ID) {
