@@ -2,10 +2,19 @@
 
 A speed field that changes color based on current speed vs. ride or average speed.
 
+|  | |
+| :------- | :------: |
+|![config_screen.png](config_screen.png)    | ![config_screen2.png](config_screen2.png)
+| ![example1.png](example1.png)   | ![example2.png](example2.png)  |
+|![example3.png](example3.png)    | ![example4.png](example4.png)  |
+
+
 ## Features
 - Current vs. ride average
 - Current vs. last lap average
 - Current lap average vs. last lap average
+- Current speed vs. target speed
+- Lap speed vs. target speed
 
 ## Requirements
 - Karoo (tested on last Karoo ) with version 1.527 or later

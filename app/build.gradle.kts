@@ -21,7 +21,7 @@ android {
         applicationId = "com.currand60.karoocolorspeed"
         minSdk = 23
         targetSdk = 34
-        versionCode = 25091003
+        versionCode = 25091101
         versionName = "0.3.2-alpha"
         signingConfig = signingConfigs.getByName("debug")
 
@@ -75,8 +75,16 @@ tasks.register("generateManifest") {
             "latestApkUrl" to "https://github.com/currand/karoo-colorspeed/releases/latest/download/app-release.apk",
             "latestVersion" to android.defaultConfig.versionName,
             "latestVersionCode" to android.defaultConfig.versionCode,
-            "developer" to "currand60",
-            "description" to "Colored Speed indicator based on ride or lap average speed",
+            "developer" to "currand",
+            "description" to "Colored Speed and icon indicator based on ride or lap average speed",
+            "screenshotUrls" to listOf(
+                "https://github.com/currand/karoo-colorspeed/releases/latest/download/example1.png",
+                "https://github.com/currand/karoo-colorspeed/releases/latest/download/example2.png",
+                "https://github.com/currand/karoo-colorspeed/releases/latest/download/example3.png",
+                "https://github.com/currand/karoo-colorspeed/releases/latest/download/example4.png",
+                "https://github.com/currand/karoo-colorspeed/releases/latest/download/config_screen.png",
+                "https://github.com/currand/karoo-colorspeed/releases/latest/download/config_screen2.png"
+            ),
         )
 
         val gson = groovy.json.JsonBuilder(manifest).toPrettyString()

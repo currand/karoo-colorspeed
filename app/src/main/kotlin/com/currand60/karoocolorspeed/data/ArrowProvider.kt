@@ -33,7 +33,7 @@ fun ArrowProvider (
             Image(
                 modifier = barModifier,
                 provider = ImageProvider(
-                    resId = R.drawable.blank,
+                    resId = R.drawable.check_indeterminate_small_24px,
                 ),
                 contentDescription = "Target",
                 contentScale = ContentScale.Crop,
