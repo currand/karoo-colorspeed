@@ -22,7 +22,7 @@ android {
         minSdk = 23
         targetSdk = 34
         versionCode = 25091002
-        versionName = "0.3.1-alpha"
+        versionName = "0.3.2-alpha"
         signingConfig = signingConfigs.getByName("debug")
 
     }
