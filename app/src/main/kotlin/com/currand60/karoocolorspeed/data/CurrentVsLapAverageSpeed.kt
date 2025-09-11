@@ -43,7 +43,7 @@ class CurrentVsLapAverageSpeed(
 
     private fun previewFlow(constantValue: Double? = null): Flow<StreamState> = flow {
         while (true) {
-            val value = constantValue ?: (((0..17).random() * 10).toDouble() / 10.0)
+            val value = constantValue ?: (((0..55).random() * 10).toDouble() / 10.0)
             emit(StreamState.Streaming(
                 DataPoint(
                     dataTypeId,

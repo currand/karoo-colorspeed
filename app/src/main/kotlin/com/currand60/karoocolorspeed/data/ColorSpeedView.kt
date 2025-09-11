@@ -79,7 +79,7 @@ fun ColorSpeedView(
                     context.getColor(
                         R.color.orange
                     )
-                ), Color(context.getColor(R.color.text_color))
+                ), Color(context.getColor(R.color.white))
             )
 
             speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> Pair(
@@ -135,7 +135,7 @@ fun ColorSpeedView(
     }
 
     val finalTextSize: Float = if (colorConfig.useArrows) {
-        config.textSize.toFloat() - 8f
+        config.textSize.toFloat() - 0f
     } else {
         config.textSize.toFloat()
     }
@@ -172,9 +172,9 @@ fun ColorSpeedView(
         }
         Row(
             modifier = GlanceModifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .defaultWeight()
-                .padding(horizontal = 4.dp),
+                .padding(horizontal = 0.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalAlignment = Alignment.Start
         ) {
@@ -201,7 +201,7 @@ fun ColorSpeedView(
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 150, heightDp = 90)
+@Preview(widthDp = 140, heightDp = 75)
 @Composable
 fun PreviewColorSpeedUnder10() {
     ColorSpeedView(
@@ -212,7 +212,7 @@ fun PreviewColorSpeedUnder10() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 50,
+            textSize = 42,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -223,7 +223,7 @@ fun PreviewColorSpeedUnder10() {
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 150, heightDp = 90)
+@Preview(widthDp = 140, heightDp = 75)
 @Composable
 fun PreviewColorSpeedUnder() {
     ColorSpeedView(
@@ -233,8 +233,8 @@ fun PreviewColorSpeedUnder() {
         titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 50,
+            alignment = ViewConfig.Alignment.CENTER,
+            textSize = 42,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -245,7 +245,7 @@ fun PreviewColorSpeedUnder() {
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 150, heightDp = 90)
+@Preview(widthDp = 140, heightDp = 75)
 @Composable
 fun PreviewColorSpeedOrange() {
     ColorSpeedView(
@@ -256,7 +256,7 @@ fun PreviewColorSpeedOrange() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 54,
+            textSize = 42,
             gridSize = Pair(30, 20),
             viewSize = Pair(478, 214),
             preview = true
@@ -267,7 +267,7 @@ fun PreviewColorSpeedOrange() {
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 150, heightDp = 90)
+@Preview(widthDp = 140, heightDp = 75)
 @Composable
 fun PreviewColorSpeedSteady() {
     ColorSpeedView(
@@ -278,7 +278,7 @@ fun PreviewColorSpeedSteady() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.LEFT,
-            textSize = 54,
+            textSize = 42,
             gridSize = Pair(60, 20),
             viewSize = Pair(478, 214),
             preview = true,
@@ -289,18 +289,18 @@ fun PreviewColorSpeedSteady() {
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 150, heightDp = 90)
+@Preview(widthDp = 140, heightDp = 75)
 @Composable
 fun PreviewColorSpeedOver() {
     ColorSpeedView(
         context = LocalContext.current,
-        currentSpeed = 125.5,
-        averageSpeed = 100.0,
+        currentSpeed = 25.5,
+        averageSpeed = 10.0,
         titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 45,
+            alignment = ViewConfig.Alignment.CENTER,
+            textSize = 42,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -311,7 +311,7 @@ fun PreviewColorSpeedOver() {
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 150, heightDp = 90)
+@Preview(widthDp = 140, heightDp = 75)
 @Composable
 fun PreviewNoBackgroundColors() {
     ColorSpeedView(
@@ -321,8 +321,8 @@ fun PreviewNoBackgroundColors() {
         titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 45,
+            alignment = ViewConfig.Alignment.CENTER,
+            textSize = 36,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
