@@ -10,8 +10,6 @@ on:
 
 jobs:
   build:
-    env:
-      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
