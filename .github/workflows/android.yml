@@ -53,6 +53,6 @@ jobs:
         name: ${{ github.ref_name }}
         prerelease: false
         generateReleaseNotes: true
-        artifacts: app/build/outputs/apk/release/app-release.apk, app/manifest.json, config_screen.png, config_screen2.png, example1.png, example2.png, example3.png example4.png
+        artifacts: app/build/outputs/apk/release/app-release.apk, app/manifest.json, config_screen.png, config_screen2.png, example1.png, example2.png, example3.png, example4.png
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
