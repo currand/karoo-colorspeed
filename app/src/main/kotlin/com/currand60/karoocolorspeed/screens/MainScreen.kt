@@ -175,6 +175,20 @@ fun MainScreen() {
         currentConfig = loadedConfig
     }
 
+    LaunchedEffect(currentConfig) {
+        Timber.d("Current config updated: $currentConfig")
+        if (currentConfig.validate()) {
+            speedPercent1Error = false
+            speedPercent2Error = false
+            speedPercent4Error = false
+            speedPercent5Error = false
+            speedPercentTargetLowError = false
+            speedPercentTargetHighError = false
+            stoppedSpeedError = false
+            targetSpeedError = false
+        }
+    }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -267,6 +281,7 @@ fun MainScreen() {
                         if (isValid && parsedValue != null) {
                             val attemptedConfig = currentConfig.copy(speedPercentLevel1 = parsedValue.toInt())
                             if (attemptedConfig.validate()) {
+                                speedPercent1Error = false
                                 currentConfig = currentConfig.copy(speedPercentLevel1 = parsedValue.toInt())
                             } else {
                                 speedPercent1Error = true
@@ -299,6 +314,7 @@ fun MainScreen() {
                         if (isValid && parsedValue != null) {
                             val attemptedConfig = currentConfig.copy(speedPercentLevel2 = parsedValue.toInt())
                             if (attemptedConfig.validate()) {
+                                speedPercent2Error = false
                                 currentConfig = currentConfig.copy(speedPercentLevel2 = parsedValue.toInt())
                             } else {
                                 speedPercent2Error = true
@@ -331,6 +347,7 @@ fun MainScreen() {
                         if (isValid && parsedValue != null) {
                             val attemptedConfig = currentConfig.copy(speedPercentMiddleTargetLow = parsedValue.toInt())
                             if (attemptedConfig.validate()) {
+                                speedPercentTargetLowError = false
                                 currentConfig = currentConfig.copy(speedPercentMiddleTargetLow = parsedValue.toInt())
                             } else {
                                 speedPercentTargetLowError = true
@@ -352,6 +369,7 @@ fun MainScreen() {
                         if (isValid && parsedValue != null) {
                             val attemptedConfig = currentConfig.copy(speedPercentMiddleTargetHigh = parsedValue.toInt())
                             if (attemptedConfig.validate()) {
+                                speedPercentTargetHighError = false
                                 currentConfig = currentConfig.copy(speedPercentMiddleTargetHigh = parsedValue.toInt())
                             } else {
                                 speedPercentTargetHighError = true
@@ -384,6 +402,7 @@ fun MainScreen() {
                         if (isValid && parsedValue != null) {
                             val attemptedConfig = currentConfig.copy(speedPercentLevel4 = parsedValue.toInt())
                             if (attemptedConfig.validate()) {
+                                speedPercent4Error = false
                                 currentConfig = currentConfig.copy(speedPercentLevel4 = parsedValue.toInt())
                             } else {
                                 speedPercent4Error = true
@@ -417,6 +436,7 @@ fun MainScreen() {
                         if (isValid && parsedValue != null) {
                             val attemptedConfig = currentConfig.copy(speedPercentLevel5 = parsedValue.toInt())
                             if (attemptedConfig.validate()) {
+                                speedPercent5Error = false
                                 currentConfig = currentConfig.copy(speedPercentLevel5 = parsedValue.toInt())
                             } else {
                                 speedPercent5Error = true

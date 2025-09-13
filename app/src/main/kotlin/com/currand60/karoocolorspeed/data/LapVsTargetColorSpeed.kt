@@ -64,9 +64,8 @@ class LapVsTargetColorSpeed(
             )
         }
         val viewJob = dataScope.launch {
-            val colorConfig = ConfigurationManager(context).getConfigFlow().first()
+            val colorConfig = ConfigurationManager(context).getConfig()
             val userProfileState = karooSystem.streamUserProfile().first()
-
             val speedFlow = if (!config.preview) karooSystem.streamDataFlow(DataType.Type.AVERAGE_SPEED_LAP) else previewFlow()
                 speedFlow.collect { streamState ->
                     when (streamState) {
