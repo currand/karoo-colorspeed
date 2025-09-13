@@ -64,7 +64,7 @@ class SpeedVsTargetColorSpeed(
             )
         }
         val viewJob = dataScope.launch {
-            val colorConfig = ConfigurationManager(context).getConfigFlow().first()
+            val colorConfig = ConfigurationManager(context).getConfig()
             val userProfileState = karooSystem.streamUserProfile().first()
             val speedUnits = when(userProfileState.preferredUnit.distance) {
                 UserProfile.PreferredUnit.UnitType.IMPERIAL -> 2.23694
