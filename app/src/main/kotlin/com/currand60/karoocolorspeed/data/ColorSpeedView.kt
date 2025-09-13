@@ -32,7 +32,7 @@ import com.currand60.karoocolorspeed.R
 import io.hammerhead.karooext.models.ViewConfig
 import kotlin.math.roundToInt
 
-@SuppressLint("RestrictedApi")
+@SuppressLint("RestrictedApi", "DiscouragedApi")
 @Composable
 fun ColorSpeedView(
     context: Context,
@@ -128,7 +128,6 @@ fun ColorSpeedView(
         else -> 5
     }
 
-
     val finalTitle: String = if (config.gridSize.first == 60) {
         val titleId = context.resources.getIdentifier(titleResource, "string", context.packageName)
         val title = context.getString(titleId)
@@ -206,6 +205,8 @@ fun ColorSpeedView(
     }
 }
 
+
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
@@ -229,6 +230,7 @@ fun PreviewColorSpeedUnderSpeedLevel1() {
     )
 }
 
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
@@ -252,6 +254,7 @@ fun PreviewColorSpeedUnderSpeedLevel2() {
     )
 }
 
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
@@ -275,6 +278,7 @@ fun PreviewColorUnderTargetLow() {
     )
 }
 
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
@@ -298,6 +302,7 @@ fun PreviewColorAtTargetLow() {
     )
 }
 
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
@@ -322,6 +327,7 @@ fun PreviewColorSpeedAtTargetHigh() {
     )
 }
 
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
@@ -346,6 +352,7 @@ fun PreviewColorSpeedUnderSpeedLevel4() {
     )
 }
 
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
@@ -370,6 +377,7 @@ fun PreviewColorSpeedUnderSpeedLevel5() {
     )
 }
 
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
@@ -394,6 +402,7 @@ fun PreviewColorSpeedOverSpeedLevel5() {
     )
 }
 
+@Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 140, heightDp = 75)
 @Composable
