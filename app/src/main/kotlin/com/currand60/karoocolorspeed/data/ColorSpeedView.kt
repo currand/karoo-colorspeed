@@ -161,6 +161,7 @@ fun ColorSpeedView(
             .fillMaxSize()
             .cornerRadius(8.dp)
             .background(backgroundColor)
+
     ) {
         Row(
             modifier = GlanceModifier
@@ -175,7 +176,10 @@ fun ColorSpeedView(
                 ),
                 contentDescription = description,
                 contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(ColorProvider(textColor)),
+                colorFilter = when(colorConfig.useBackgroundColors) {
+                        true -> ColorFilter.tint(ColorProvider(textColor))
+                        else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
+                },
             )
             Text(
                 modifier = GlanceModifier
@@ -221,7 +225,7 @@ fun ColorSpeedView(
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65)
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel1() {
     val config = ConfigData.DEFAULT
@@ -245,7 +249,7 @@ fun PreviewColorSpeedUnderSpeedLevel1() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65)
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel2() {
     val config = ConfigData.DEFAULT
@@ -269,7 +273,7 @@ fun PreviewColorSpeedUnderSpeedLevel2() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65)
 @Composable
 fun PreviewColorUnderTargetLow() {
     val config = ConfigData.DEFAULT
@@ -280,7 +284,7 @@ fun PreviewColorUnderTargetLow() {
         titleResource = "avg_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.CENTER,
+            alignment = ViewConfig.Alignment.RIGHT,
             textSize = 42,
             gridSize = Pair(30, 20),
             viewSize = Pair(478, 214),
@@ -293,7 +297,7 @@ fun PreviewColorUnderTargetLow() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65)
 @Composable
 fun PreviewColorAtTargetLow() {
     val config = ConfigData.DEFAULT
@@ -317,7 +321,7 @@ fun PreviewColorAtTargetLow() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65, )
 @Composable
 fun PreviewColorSpeedAtTargetHigh() {
     val config = ConfigData.DEFAULT
@@ -342,7 +346,7 @@ fun PreviewColorSpeedAtTargetHigh() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65)
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel4() {
     val config = ConfigData.DEFAULT
@@ -367,7 +371,7 @@ fun PreviewColorSpeedUnderSpeedLevel4() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65)
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel5() {
     val config = ConfigData.DEFAULT
@@ -392,7 +396,7 @@ fun PreviewColorSpeedUnderSpeedLevel5() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65)
 @Composable
 fun PreviewColorSpeedOverSpeedLevel5() {
     val config = ConfigData.DEFAULT
@@ -417,7 +421,7 @@ fun PreviewColorSpeedOverSpeedLevel5() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 75)
+@Preview(widthDp = 140, heightDp = 65)
 @Composable
 fun PreviewNoBackgroundColors() {
     ColorSpeedView(

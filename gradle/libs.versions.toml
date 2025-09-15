@@ -1,29 +1,31 @@
 [versions]
-agp = "8.11.1"
-kotlin = "2.2.10"
+agp = "8.11.2"
+kotlin = "2.2.20"
 datastorePreferences = "1.1.7"
 kotlinxCoroutinesDebug = "1.10.2"
-navigationRuntimeAndroid = "2.9.3"
+navigationRuntimeAndroid = "2.9.4"
 javaxInject = "1"
 androidxCore = "1.17.0"
-androidxLifecycle = "2.9.2"
-androidxActivity = "1.10.1"
-androidxComposeUi = "1.9.0"
+androidxLifecycle = "2.9.3"
+androidxActivity = "1.11.0"
+androidxComposeUi = "1.9.1"
 androidxComposeMaterial = "1.3.2"
 glance = "1.1.1"
 timber = "5.0.1"
-koin-bom = "4.1.0"
+koin-bom = "4.1.1"
+glancePreview = "1.1.1"
+hammerHeadExt  = "1.1.5"
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-google-devtools-ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version = "2.2.20-2.0.3" }
 
 
 [libraries]
-hammerhead-karoo-ext = { group = "io.hammerhead", name = "karoo-ext", version = "1.1.5" }
+hammerhead-karoo-ext = { group = "io.hammerhead", name = "karoo-ext", version.ref = "hammerHeadExt" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInject" }
 kotlinx-coroutines-debug = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-debug", version.ref = "kotlinxCoroutinesDebug" }
@@ -45,7 +47,7 @@ androidx-compose-material = { module = "androidx.compose.material3:material3", v
 androidx-glance-appwidget = { group = "androidx.glance", name = "glance-appwidget", version.ref = "glance" }
 androidx-glance-preview = { group = "androidx.glance", name = "glance-preview", version.ref = "glance" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
-androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version = "1.1.1" }
+androidx-glance-appwidget-preview = { group = "androidx.glance", name = "glance-appwidget-preview", version.ref = "glancePreview" }
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 
 [bundles]
