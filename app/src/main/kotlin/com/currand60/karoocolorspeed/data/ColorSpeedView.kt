@@ -31,6 +31,17 @@ import androidx.glance.unit.ColorProvider
 import com.currand60.karoocolorspeed.R
 import io.hammerhead.karooext.models.ViewConfig
 import kotlin.math.roundToInt
+import java.text.NumberFormat
+import java.util.Locale
+
+private fun Double.formated(): String {
+    val currentLocale = Locale.getDefault()
+    val numberFormat = NumberFormat.getInstance(currentLocale).apply {
+        minimumFractionDigits = 1
+        maximumFractionDigits = 1
+    }
+    return numberFormat.format(this)
+}
 
 @SuppressLint("RestrictedApi", "DiscouragedApi")
 @Composable
@@ -140,7 +151,7 @@ fun ColorSpeedView(
     }
 
     val finalTextSize: Float = if (colorConfig.useArrows) {
-        config.textSize.toFloat() - 0f
+        config.textSize.toFloat() - 6f
     } else {
         config.textSize.toFloat()
     }
@@ -155,7 +166,8 @@ fun ColorSpeedView(
             modifier = GlanceModifier
                 .height(20.dp)
                 .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalAlignment = Alignment.Bottom
         ) {
             Image(
                 provider = ImageProvider(
@@ -166,6 +178,8 @@ fun ColorSpeedView(
                 colorFilter = ColorFilter.tint(ColorProvider(textColor)),
             )
             Text(
+                modifier = GlanceModifier
+                    .defaultWeight(),
                 text = finalTitle.uppercase(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
@@ -179,9 +193,8 @@ fun ColorSpeedView(
             modifier = GlanceModifier
                 .fillMaxSize()
                 .defaultWeight()
-                .padding(horizontal = 0.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalAlignment = Alignment.Start
+                .padding(horizontal = 2.dp),
+            verticalAlignment = Alignment.Bottom,
         ) {
             if (colorConfig.useArrows) {
                 ArrowProvider(
@@ -193,7 +206,7 @@ fun ColorSpeedView(
             Text(
                 modifier = GlanceModifier
                     .defaultWeight(),
-                text = ((currentSpeed * 10.0).roundToInt() / 10.0).toString(),
+                text = ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
                     fontSize = TextUnit(finalTextSize, TextUnitType.Sp),

@@ -10,7 +10,9 @@ import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
+import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.width
@@ -25,20 +27,27 @@ fun ArrowProvider (
     level: Int,
     color: Color
 ){
-    val arrowModifier = GlanceModifier.width(28.dp).height(36.dp)
-    val barModifier = GlanceModifier.width(28.dp).height(36.dp).padding(1.dp)
+//    val arrowModifier = GlanceModifier.width(28.dp).height(36.dp)
+//    val barModifier = GlanceModifier.width(28.dp).height(36.dp).padding(1.dp)
+        val arrowModifier = GlanceModifier.padding(0.dp).width(42.dp).fillMaxHeight()
+    val barModifier = GlanceModifier.width(28.dp).fillMaxHeight().padding(1.dp)
 
     when (level) {
         0 ->
+        Column(
+            modifier = GlanceModifier
+                .fillMaxHeight()
+        ) {
             Image(
                 modifier = barModifier,
                 provider = ImageProvider(
                     resId = R.drawable.check_indeterminate_small_24px,
                 ),
                 contentDescription = "Target",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(ColorProvider(Color.Transparent))
             )
+}
         1 ->
             Image(
                 modifier = arrowModifier,
@@ -46,7 +55,7 @@ fun ArrowProvider (
                     resId = R.drawable.stat_minus_2_24px,
                 ),
                 contentDescription = "Target",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(ColorProvider(color))
             )
         2 ->
@@ -56,7 +65,7 @@ fun ArrowProvider (
                     resId = R.drawable.stat_minus_1_24px,
                 ),
                 contentDescription = "Target",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(ColorProvider(color))
             )
         3 ->
@@ -66,7 +75,7 @@ fun ArrowProvider (
                     resId = R.drawable.stat_0_24px,
                 ),
                 contentDescription = "Target",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(ColorProvider(color))
             )
 
@@ -77,7 +86,7 @@ fun ArrowProvider (
                     resId = R.drawable.stat_1_24px,
                 ),
                 contentDescription = "Target",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(ColorProvider(color))
             )
         5 ->
@@ -87,7 +96,7 @@ fun ArrowProvider (
                     resId = R.drawable.stat_2_24px,
                 ),
                 contentDescription = "Target",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 colorFilter = ColorFilter.tint(ColorProvider(color))
             )
 
