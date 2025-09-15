@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches: [ "master" ]
-    tags: [ "*" ]
+    tags: [ "*-release" ]
+    tags-ignore: [ "*pre-release" ]
   pull_request:
     branches: [ "master" ]
 
