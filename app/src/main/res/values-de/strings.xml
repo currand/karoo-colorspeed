@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ChatGPT generated translations for strings.xml -->
+    <!--                                                -->
+    <!-- Application name, highly abbreviated for cycling computer display -->
+    <string name="app_name">Farb-Geschw.</string>
+    <!-- Extension name, highly abbreviated for cycling computer display -->
+    <string name="extension_name">Farb-Geschw.</string>
+    <!-- Concise description of the extension using cycling terminology and abbreviations -->
+    <string name="extension_description">Farbig Geschw. nach Ø Fahrt</string>
+    <!-- Short title for current speed vs. ride average, using common cycling abbreviations -->
+    <string name="speed_title">Geschw. vs. Ø Fahrt</string>
+    <!-- Very short title for speed, ideal for data fields -->
+    <string name="speed_title_short">Geschw.</string>
+    <!-- Short title for current speed vs. lap average, using common cycling abbreviations -->
+    <string name="avg_speed_title">Geschw. vs. Rd.</string>
+    <!-- Very short title for speed vs. lap, ideal for data fields -->
+    <string name="avg_speed_title_short">Geschw. vs. Rd.</string>
+    <!-- Concise description for current speed vs. last lap average -->
+    <string name="avg_speed_description">Akt. Geschw. vs. letzter Ø Rd.</string>
+    <!-- Short title for current lap speed vs. last lap average -->
+    <string name="lap_speed_title">Akt. Rd. vs. letzte Rd.</string>
+    <!-- Very short title for current vs. last lap (speed implied) -->
+    <string name="lap_speed_title_short">vs. LR</string>
+    <!-- Concise description for current lap speed vs. last lap average -->
+    <string name="lap_speed_description">Akt. Rd.-Geschw. vs. letzter Ø Rd.</string>
+    <!-- Very short title for speed vs. target -->
+    <string name="speed_vs_target_title">vs. Ziel</string>
+    <!-- Very short title for speed vs. target, ideal for data fields -->
+    <string name="speed_vs_target_title_short">vs. Ziel</string>
+    <!-- Concise description for current speed vs. target speed -->
+    <string name="speed_vs_target_description">Akt. Geschw. vs. Ziel</string>
+    <!-- Short title for lap speed vs. target speed -->
+    <string name="lap_vs_target_title">Rd. vs. Ziel</string>
+    <!-- Very short title for lap vs. target, ideal for data fields -->
+    <string name="lap_vs_target_title_short">Rd. vs. Z.</string>
+    <!-- Concise description for current lap speed vs. target speed -->
+    <string name="lap_vs_target_description">Akt. Rd.-Geschw. vs. Ziel</string>
+</resources>

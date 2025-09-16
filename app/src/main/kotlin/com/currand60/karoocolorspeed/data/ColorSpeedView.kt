@@ -1,6 +1,7 @@
 package com.currand60.karoocolorspeed.data
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -229,6 +230,7 @@ fun ColorSpeedView(
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel1() {
     val config = ConfigData.DEFAULT
+
     ColorSpeedView(
         context = LocalContext.current,
         currentSpeed = config.speedPercentLevel1 - 10.0,
