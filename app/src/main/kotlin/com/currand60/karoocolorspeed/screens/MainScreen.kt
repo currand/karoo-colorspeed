@@ -111,12 +111,15 @@ fun PercentConfigField(
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    configManager: ConfigurationManager = koinInject(),
+    karooSystem: KarooSystemServiceProvider = koinInject()
+) {
 
     val context = LocalContext.current
-    val configManager: ConfigurationManager = koinInject()
+//    val configManager: ConfigurationManager = koinInject()
     val coroutineScope = rememberCoroutineScope()
-    val karooSystem: KarooSystemServiceProvider = koinInject()
+//    val karooSystem: KarooSystemServiceProvider = koinInject()
 
     val scrollState = rememberScrollState()
     val isScrolledToBottom = scrollState.value == scrollState.maxValue
@@ -201,14 +204,13 @@ fun MainScreen() {
             verticalArrangement = Arrangement.spacedBy(1.dp)
         ) {
             Text(
-                text = "Color Speed Settings",
+                text = context.getString(R.string.color_speed_settings_title),
                 textAlign = TextAlign.Left,
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Enter the percentage of either average or target speed " +
-                        "for this level and color",
+                text = context.getString(R.string.color_speed_settings_description),
                 textAlign = TextAlign.Left,
                 color = MaterialTheme.colorScheme.onBackground,
             )
@@ -244,7 +246,7 @@ fun MainScreen() {
                         }
                         Text(suffixText)
                     },
-                    label = { Text("Stopped Speed") },
+                    label = { Text(context.getString(R.string.stopped_speed)) },
                     placeholder = {
                         val placeholderText = loadedConfig
                             .stoppedValue
@@ -257,7 +259,7 @@ fun MainScreen() {
                     singleLine = true,
                     isError = stoppedSpeedError,
                     supportingText = {
-                        if (stoppedSpeedError) Text("Please enter a valid number")
+                        if (stoppedSpeedError) Text(context.getString(R.string.enter_valid_number))
                     }
                 )
             }
@@ -272,7 +274,7 @@ fun MainScreen() {
                         .background(color = Color(context.getColor(R.color.dark_red)), CircleShape)
                 )
                 PercentConfigField(
-                    label = "Well below target",
+                    label = context.getString(R.string.well_below_target),
                     initialValue = currentConfig.speedPercentLevel1.toDouble(),
                     prefix = "<",
                     units = "%",
@@ -292,7 +294,7 @@ fun MainScreen() {
                         .weight(0.8f)
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent1Error,
-                    errorSupportingText = "Please enter a valid number below the next highest level",
+                    errorSupportingText = context.getString(R.string.enter_number_below_next_highest_level),
                 )
             }
             Row(
@@ -306,7 +308,7 @@ fun MainScreen() {
                         .background(color = Color(context.getColor(R.color.orange)), CircleShape)
                 )
                 PercentConfigField(
-                    label = "Below target",
+                    label = context.getString(R.string.below_target),
                     initialValue = currentConfig.speedPercentLevel2.toDouble(),
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
@@ -325,7 +327,7 @@ fun MainScreen() {
                         .weight(0.8f)
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent2Error,
-                    errorSupportingText = "Please enter a valid number below the next highest level",
+                    errorSupportingText = context.getString(R.string.enter_number_below_next_highest_level),
                 )
             }
             Row(
@@ -339,7 +341,7 @@ fun MainScreen() {
                         .background(color = Color(context.getColor(R.color.middle)), CircleShape)
                 )
                 PercentConfigField(
-                    label = "Target low",
+                    label = context.getString(R.string.target_low),
                     initialValue = currentConfig.speedPercentMiddleTargetLow.toDouble(),
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
@@ -358,10 +360,10 @@ fun MainScreen() {
                         .weight(0.4f)
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercentTargetLowError,
-                    errorSupportingText = "Please enter a valid number below the next highest level",
+                    errorSupportingText = context.getString(R.string.enter_number_below_next_highest_level),
                 )
                 PercentConfigField(
-                    label = "Target high",
+                    label = context.getString(R.string.target_high),
                     initialValue = currentConfig.speedPercentMiddleTargetHigh.toDouble(),
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
@@ -380,7 +382,7 @@ fun MainScreen() {
                         .weight(0.4f)
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercentTargetHighError,
-                    errorSupportingText = "Please enter a valid number below the next highest level",
+                    errorSupportingText = context.getString(R.string.enter_number_below_next_highest_level),
                 )
             }
             Row(
@@ -394,7 +396,7 @@ fun MainScreen() {
                         .background(color = Color(context.getColor(R.color.light_green)), CircleShape)
                 )
                 PercentConfigField(
-                    label = "Above target",
+                    label = context.getString(R.string.above_target),
                     initialValue = currentConfig.speedPercentLevel4.toDouble(),
                     units = "%",
                     onValueParsed = { newValueString, parsedValue, isValid ->
@@ -413,7 +415,7 @@ fun MainScreen() {
                         .weight(0.8f)
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent4Error,
-                    errorSupportingText = "Please enter a valid number below the next highest level",
+                    errorSupportingText = context.getString(R.string.enter_number_below_next_highest_level),
                 )
             }
             Row(
@@ -427,7 +429,7 @@ fun MainScreen() {
                         .background(color = Color(context.getColor(R.color.dark_green)), CircleShape)
                 )
                 PercentConfigField(
-                    label = "Well above target",
+                    label = context.getString(R.string.well_above_target),
                     initialValue = currentConfig.speedPercentLevel5.toDouble(),
                     prefix = ">",
                     units = "%",
@@ -447,7 +449,7 @@ fun MainScreen() {
                         .weight(0.8f)
                         .padding(start = 5.dp, end = 5.dp),
                     isError = speedPercent5Error,
-                    errorSupportingText = "Please enter a valid number below the next highest level",
+                    errorSupportingText = context.getString(R.string.enter_number_below_next_highest_level),
                 )
             }
             Row(modifier = Modifier.fillMaxHeight(),
@@ -464,7 +466,7 @@ fun MainScreen() {
                     modifier = Modifier
                         .padding(start = 5.dp)
                         .align(Alignment.CenterVertically),
-                    text = "Display arrows next to the speed values?",
+                    text = context.getString(R.string.display_errors),
                 )
             }
             Row(modifier = Modifier.fillMaxHeight(),
@@ -481,7 +483,7 @@ fun MainScreen() {
                     modifier = Modifier
                         .padding(start = 5.dp)
                         .align(Alignment.CenterVertically),
-                    text = "Change background colors based on speed?",
+                    text = context.getString(R.string.background_colors),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
@@ -507,7 +509,7 @@ fun MainScreen() {
                         }
                         Text(suffixText)
                     },
-                    label = { Text("Target Speed") },
+                    label = { Text(context.getString(R.string.target_speed)) },
                     placeholder = {
                         val placeholderText = loadedConfig
                             .targetSpeed
@@ -520,7 +522,7 @@ fun MainScreen() {
                     singleLine = true,
                     isError = targetSpeedError,
                     supportingText = {
-                        if (stoppedSpeedError) Text("Please enter a valid number")
+                        if (stoppedSpeedError) Text(context.getString(R.string.enter_valid_number))
                     }
                 )
             }
@@ -548,7 +550,7 @@ fun MainScreen() {
             ) {
                 Icon(Icons.Default.Check, contentDescription = "Save")
                 Spacer(modifier = Modifier.width(5.dp))
-                Text("Save")
+                Text(context.getString(R.string.save))
             }
 
         }
@@ -572,8 +574,12 @@ fun MainScreen() {
     }
 }
 
-@Preview(name = "karoo", device = "spec:width=480px,height=800px,dpi=300")
+@Preview(locale = "de", name = "karoo", device = "spec:width=480px,height=800px,dpi=300")
 @Composable
-private fun PreviewTabLayout() {
-    MainScreen()
+private fun Preview_MyComposable_Enabled() {
+    val context = LocalContext.current
+    MainScreen(
+        configManager = ConfigurationManager(context),
+        karooSystem = KarooSystemServiceProvider(context)
+    )
 }

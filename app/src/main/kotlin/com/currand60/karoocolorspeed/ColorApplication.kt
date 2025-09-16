@@ -2,6 +2,7 @@ package com.currand60.karoocolorspeed
 
 import android.app.Application
 import android.content.Context
+import androidx.glance.LocalContext
 import com.currand60.karoocolorspeed.managers.ConfigurationManager
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.models.OnStreamState
@@ -21,6 +22,8 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+
+
 
 class KarooSystemServiceProvider(private val context: Context) {
     val karooSystemService: KarooSystemService = KarooSystemService(context)

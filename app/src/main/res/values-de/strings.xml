@@ -36,4 +36,37 @@
     <string name="lap_vs_target_title_short">Rd. vs. Z.</string>
     <!-- Concise description for current lap speed vs. target speed -->
     <string name="lap_vs_target_description">Akt. Rd.-Geschw. vs. Ziel</string>
+    <!-- Title for the Color Speed settings screen -->
+    <string name="color_speed_settings_title">Farbig-Geschwindigkeitseinstellungen</string>
+    <!-- Description for the Color Speed settings, explaining how to set levels. Formal tone. -->
+    <string name="color_speed_settings_description">Geben Sie den Prozentsatz der Durchschnitts- oder Zielgeschwindigkeit für dieses Level und diese Farbe ein.</string>
+    <!-- Label for when speed is zero or stopped -->
+    <string name="stopped_speed">Geschwindigkeit im Stillstand</string>
+    <!-- Label for the target speed setting -->
+    <string name="target_speed">Zielgeschwindigkeit</string>
+    <!-- Error message for invalid number input. Formal tone. -->
+    <string name="enter_valid_number">Bitte geben Sie eine gültige Zahl ein.</string>
+    <!-- Indicator for speed significantly below the target -->
+    <string name="well_below_target">Deutlich unter Ziel</string>
+    <!-- Indicator for speed just below the target -->
+    <string name="below_target">Unter Ziel</string>
+    <!-- Indicator for speed that is exactly at the target -->
+    <string name="at_target">Am Ziel</string>
+    <!-- Indicator for target speed being set to a low value -->
+    <string name="target_low">Ziel niedrig</string>
+    <!-- Indicator for target speed being set to a high value -->
+    <string name="target_high">Ziel hoch</string>
+    <!-- Indicator for speed just above the target -->
+    <string name="above_target">Über Ziel</string>
+    <!-- Indicator for speed significantly above the target -->
+    <string name="well_above_target">Deutlich über Ziel</string>
+    <!-- Error message for a number input that exceeds the next level's value. Formal tone. -->
+    <string name="enter_number_below_next_highest_level">Bitte geben Sie eine gültige Zahl ein, die unter dem nächsthöheren Level liegt.</string>
+    <!-- Setting to enable or disable display of arrows next to speed values. Formal tone. -->
+    <string name="display_errors">Pfeile neben den Geschwindigkeitswerten anzeigen.</string>
+    <!-- Setting to enable or disable background color changes based on speed. Formal tone. -->
+    <string name="background_colors">Hintergrundfarben basierend auf der Geschwindigkeit ändern.</string>
+    <!-- Button text for saving settings -->
+    <string name="save">Speichern</string>
+
 </resources>
