@@ -16,4 +16,29 @@
     <string name="lap_vs_target_title">Lap vs. target</string>
     <string name="lap_vs_target_title_short">Lap vs. tar</string>
     <string name="lap_vs_target_description">Current lap speed vs. target speed</string>
+    <!-- MainScreen Descriptions -->
+    <string name="color_speed_settings_title">Color Speed Settings</string>
+    <string name="color_speed_settings_description">Enter the percentage of either average or target speed for this level and color</string>
+    <string name="stopped_speed">Stopped Speed</string>
+    <string name="target_speed">Target Speed</string>
+    <string name="enter_valid_number">Please enter a valid number</string>
+    <string name="well_below_target">Well below target</string>
+    <string name="below_target">Below target</string>
+    <string name="at_target">At target</string>
+    <string name="target_low">"Target low"</string>
+    <string name="target_high">"Target high"</string>
+    <string name="above_target">Above target</string>
+    <string name="well_above_target">Well above target</string>
+    <string name="enter_number_below_next_highest_level">"Please enter a valid number below the next highest level"</string>
+    <string name="display_errors">"Display arrows next to the speed values?"</string>
+    <string name="background_colors">"Change background colors based on speed?"</string>
+    <string name="save">Save</string>
+
+
+
+
+
+
+
+
 </resources>

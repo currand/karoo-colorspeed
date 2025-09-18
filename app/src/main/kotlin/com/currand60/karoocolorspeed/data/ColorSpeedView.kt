@@ -229,6 +229,7 @@ fun ColorSpeedView(
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel1() {
     val config = ConfigData.DEFAULT
+
     ColorSpeedView(
         context = LocalContext.current,
         currentSpeed = config.speedPercentLevel1 - 10.0,
