@@ -574,7 +574,7 @@ fun MainScreen(
     }
 }
 
-@Preview(locale = "de", name = "karoo", device = "spec:width=480px,height=800px,dpi=300")
+@Preview(locale = "en", name = "karoo", device = "spec:width=480px,height=800px,dpi=300")
 @Composable
 private fun Preview_MyComposable_Enabled() {
     val context = LocalContext.current

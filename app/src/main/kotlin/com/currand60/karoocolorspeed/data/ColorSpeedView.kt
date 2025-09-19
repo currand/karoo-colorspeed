@@ -22,6 +22,8 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.wrapContentHeight
+import androidx.glance.layout.wrapContentSize
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontFamily
@@ -151,7 +153,7 @@ fun ColorSpeedView(
     }
 
     val finalTextSize: Float = if (colorConfig.useArrows) {
-        config.textSize.toFloat() - 6f
+        config.textSize.toFloat() - 0f
     } else {
         config.textSize.toFloat()
     }
@@ -165,12 +167,17 @@ fun ColorSpeedView(
     ) {
         Row(
             modifier = GlanceModifier
-                .height(20.dp)
+                .wrapContentHeight()
+                .defaultWeight()
+                .height(24.dp)
+                .padding(bottom = 2.dp)
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalAlignment = Alignment.Bottom
         ) {
             Image(
+                modifier = GlanceModifier
+                    .padding(top = 6.dp),
                 provider = ImageProvider(
                     resId = R.drawable.icon_gauge,
                 ),
@@ -187,7 +194,7 @@ fun ColorSpeedView(
                 text = finalTitle.uppercase(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
-                    fontSize = TextUnit(16f, TextUnitType.Sp),
+                    fontSize = TextUnit(20f, TextUnitType.Sp),
                     textAlign = alignment,
                     fontFamily = FontFamily.SansSerif
                 )
@@ -209,6 +216,8 @@ fun ColorSpeedView(
             }
             Text(
                 modifier = GlanceModifier
+                    .wrapContentSize()
+                    .fillMaxSize()
                     .defaultWeight(),
                 text = ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
                 style = TextStyle(
@@ -225,7 +234,7 @@ fun ColorSpeedView(
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = 140, heightDp = 80)
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel1() {
     val config = ConfigData.DEFAULT
