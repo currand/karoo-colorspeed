@@ -16,13 +16,16 @@ import androidx.glance.LocalContext
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
+import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.width
+import androidx.glance.layout.wrapContentSize
+import androidx.glance.layout.wrapContentWidth
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontFamily
@@ -164,7 +167,11 @@ fun ColorSpeedView(
     val bottomRowHeight = viewHeightInDp - topRowHeight + 2f
 
     val finalTextSize: Float = if (colorConfig.useArrows && config.gridSize.first <= 30) {
-        config.textSize.toFloat() - 6f
+        if (currentSpeed >= 100.0) {
+            config.textSize.toFloat() - 12f
+        } else {
+            config.textSize.toFloat() - 8f
+        }
     } else {
         config.textSize.toFloat()
     }
@@ -210,11 +217,17 @@ fun ColorSpeedView(
             modifier = GlanceModifier
                 .fillMaxWidth()
                 .height(bottomRowHeight.dp)
-                .padding(start = 8.dp, end = 8.dp),
-            verticalAlignment = Alignment.Bottom
+                .padding(start = 0.dp, end = 8.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalAlignment = Alignment.Start
         ) {
             if (colorConfig.useArrows) {
                 ArrowProvider(
+                    modifier = GlanceModifier
+                        .fillMaxHeight()
+                        .defaultWeight()
+                        .wrapContentWidth()
+                        .width(30.dp),
                     level = barLevel,
                     color = textColor
                 )
@@ -222,8 +235,8 @@ fun ColorSpeedView(
             }
             Text(
                 modifier = GlanceModifier
-                    .fillMaxWidth()
-                    .defaultWeight(),
+                    .defaultWeight()
+                    .fillMaxWidth(),
                 text = ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
