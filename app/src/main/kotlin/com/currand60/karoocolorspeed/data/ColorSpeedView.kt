@@ -2,6 +2,7 @@ package com.currand60.karoocolorspeed.data
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.TypedValue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
@@ -15,15 +16,10 @@ import androidx.glance.LocalContext
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Column
-import androidx.glance.layout.ContentScale
+import androidx.glance.layout.Box
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.height
 import androidx.glance.layout.padding
-import androidx.glance.layout.wrapContentHeight
-import androidx.glance.layout.wrapContentSize
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontFamily
@@ -35,6 +31,14 @@ import io.hammerhead.karooext.models.ViewConfig
 import kotlin.math.roundToInt
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.math.ceil
+
+fun convertSpToDp(context: Context, spValue: Float): Float {
+    val metrics = context.resources.displayMetrics
+    val spInPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, metrics)
+    val dpInPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1.0f, metrics)
+    return spInPixels / dpInPixels
+}
 
 private fun Double.formated(): String {
     val currentLocale = Locale.getDefault()
@@ -58,7 +62,8 @@ fun ColorSpeedView(
     speedUnits: Double,
 ) {
 
-
+    val viewWidthInDp = ceil(config.viewSize.first / context.resources.displayMetrics.density)
+    val viewHeightInDp = ceil(config.viewSize.second / context.resources.displayMetrics.density)
 
     val speedPercentageOfAverage: Int = if (currentSpeed > 0 && averageSpeed > 0) {
         ((currentSpeed / averageSpeed) * 100.0).toInt()
@@ -152,13 +157,29 @@ fun ColorSpeedView(
         title.uppercase()
     }
 
-    val finalTextSize: Float = if (colorConfig.useArrows) {
-        config.textSize.toFloat() - 0f
+    val finalTextSize: Float = if (colorConfig.useArrows && config.gridSize.first <= 15) {
+        config.textSize.toFloat() - 4f
     } else {
         config.textSize.toFloat()
     }
 
-    Column(
+    val topRowPadding = viewHeightInDp / 12
+
+    val bottomRowPadding = if (viewHeightInDp > 200 ) {
+        //alignment is very (very) finicky...
+        54f
+    } else if (viewHeightInDp > 100 ) {
+        44f
+    } else if (viewHeightInDp > 80 ) {
+        24f
+    } else if (viewHeightInDp > 70 ) {
+        20f
+    } else {
+        24f
+    }
+
+
+    Box(
         modifier = GlanceModifier
             .fillMaxSize()
             .cornerRadius(8.dp)
@@ -167,22 +188,17 @@ fun ColorSpeedView(
     ) {
         Row(
             modifier = GlanceModifier
-                .wrapContentHeight()
-                .defaultWeight()
-                .height(24.dp)
-                .padding(bottom = 2.dp)
-                .fillMaxWidth(),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Top
         ) {
             Image(
                 modifier = GlanceModifier
-                    .padding(top = 6.dp),
+                    .padding(end = 2.dp, bottom = 2.dp, top = (topRowPadding + 4).dp),
                 provider = ImageProvider(
                     resId = R.drawable.icon_gauge,
                 ),
                 contentDescription = description,
-                contentScale = ContentScale.Fit,
                 colorFilter = when(colorConfig.useBackgroundColors) {
                         true -> ColorFilter.tint(ColorProvider(textColor))
                         else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
@@ -190,11 +206,11 @@ fun ColorSpeedView(
             )
             Text(
                 modifier = GlanceModifier
-                    .defaultWeight(),
+                    .padding(top = topRowPadding.dp),
                 text = finalTitle.uppercase(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
-                    fontSize = TextUnit(20f, TextUnitType.Sp),
+                    fontSize = TextUnit(16f, TextUnitType.Sp),
                     textAlign = alignment,
                     fontFamily = FontFamily.SansSerif
                 )
@@ -203,9 +219,7 @@ fun ColorSpeedView(
         Row(
             modifier = GlanceModifier
                 .fillMaxSize()
-                .defaultWeight()
-                .padding(horizontal = 2.dp),
-            verticalAlignment = Alignment.Bottom,
+                .padding(start = 8.dp, end = 8.dp),
         ) {
             if (colorConfig.useArrows) {
                 ArrowProvider(
@@ -216,10 +230,10 @@ fun ColorSpeedView(
             }
             Text(
                 modifier = GlanceModifier
-                    .wrapContentSize()
-                    .fillMaxSize()
+                    .padding(top = bottomRowPadding.dp)
                     .defaultWeight(),
-                text = ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
+                text = viewHeightInDp.toString(),
+//                    ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
                     fontSize = TextUnit(finalTextSize, TextUnitType.Sp),
@@ -234,7 +248,7 @@ fun ColorSpeedView(
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 250, heightDp = 90)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel1() {
     val config = ConfigData.DEFAULT
@@ -246,8 +260,8 @@ fun PreviewColorSpeedUnderSpeedLevel1() {
         titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 42,
+            alignment = ViewConfig.Alignment.CENTER,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -259,7 +273,7 @@ fun PreviewColorSpeedUnderSpeedLevel1() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel2() {
     val config = ConfigData.DEFAULT
@@ -271,7 +285,7 @@ fun PreviewColorSpeedUnderSpeedLevel2() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 42,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -283,7 +297,7 @@ fun PreviewColorSpeedUnderSpeedLevel2() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorUnderTargetLow() {
     val config = ConfigData.DEFAULT
@@ -295,7 +309,7 @@ fun PreviewColorUnderTargetLow() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 42,
+            textSize = 69,
             gridSize = Pair(30, 20),
             viewSize = Pair(478, 214),
             preview = true
@@ -307,7 +321,7 @@ fun PreviewColorUnderTargetLow() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorAtTargetLow() {
     val config = ConfigData.DEFAULT
@@ -319,7 +333,7 @@ fun PreviewColorAtTargetLow() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 42,
+            textSize = 69,
             gridSize = Pair(30, 20),
             viewSize = Pair(478, 214),
             preview = true
@@ -331,7 +345,7 @@ fun PreviewColorAtTargetLow() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65, )
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedAtTargetHigh() {
     val config = ConfigData.DEFAULT
@@ -344,7 +358,7 @@ fun PreviewColorSpeedAtTargetHigh() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.LEFT,
-            textSize = 36,
+            textSize = 69,
             gridSize = Pair(60, 20),
             viewSize = Pair(478, 214),
             preview = true,
@@ -356,7 +370,7 @@ fun PreviewColorSpeedAtTargetHigh() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel4() {
     val config = ConfigData.DEFAULT
@@ -369,7 +383,7 @@ fun PreviewColorSpeedUnderSpeedLevel4() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 36,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -381,10 +395,11 @@ fun PreviewColorSpeedUnderSpeedLevel4() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel5() {
-    val config = ConfigData.DEFAULT
+    var config = ConfigData.DEFAULT
+    config = config.copy(useArrows = false)
 
     ColorSpeedView(
         context = LocalContext.current,
@@ -394,19 +409,19 @@ fun PreviewColorSpeedUnderSpeedLevel5() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 36,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
         ),
-        colorConfig = ConfigData.DEFAULT,
+        colorConfig = config,
         speedUnits = 2.23694
     )
 }
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedOverSpeedLevel5() {
     val config = ConfigData.DEFAULT
@@ -419,7 +434,7 @@ fun PreviewColorSpeedOverSpeedLevel5() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 36,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -431,7 +446,7 @@ fun PreviewColorSpeedOverSpeedLevel5() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewNoBackgroundColors() {
     ColorSpeedView(
@@ -442,7 +457,7 @@ fun PreviewNoBackgroundColors() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 36,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true

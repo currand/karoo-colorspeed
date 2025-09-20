@@ -29,8 +29,8 @@ fun ArrowProvider (
 ){
 //    val arrowModifier = GlanceModifier.width(28.dp).height(36.dp)
 //    val barModifier = GlanceModifier.width(28.dp).height(36.dp).padding(1.dp)
-        val arrowModifier = GlanceModifier.padding(0.dp).width(42.dp).fillMaxHeight()
-    val barModifier = GlanceModifier.width(28.dp).fillMaxHeight().padding(1.dp)
+        val arrowModifier = GlanceModifier //.padding(0.dp).width(42.dp).fillMaxHeight()
+    val barModifier = GlanceModifier //.width(28.dp).fillMaxHeight().padding(1.dp)
 
     when (level) {
         0 ->
