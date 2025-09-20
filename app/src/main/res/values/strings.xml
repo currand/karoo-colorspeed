@@ -5,7 +5,7 @@
     <string name="speed_title">Speed vs. Ride Average</string>
     <string name="speed_title_short">Speed</string>
     <string name="avg_speed_title">Speed vs. Lap</string>
-    <string name="avg_speed_title_short">Speed vs. Lap</string>
+    <string name="avg_speed_title_short">vs. Lap</string>
     <string name="avg_speed_description">Current speed vs. last lap average</string>
     <string name="lap_speed_title">Current vs. last lap</string>
     <string name="lap_speed_title_short">vs. LL</string>

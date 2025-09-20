@@ -17,8 +17,11 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
+import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
@@ -28,10 +31,10 @@ import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.currand60.karoocolorspeed.R
 import io.hammerhead.karooext.models.ViewConfig
-import kotlin.math.roundToInt
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 fun convertSpToDp(context: Context, spValue: Float): Float {
     val metrics = context.resources.displayMetrics
@@ -156,61 +159,48 @@ fun ColorSpeedView(
         val title = context.getString(titleId)
         title.uppercase()
     }
+    
+    val topRowHeight = 22f
+    val bottomRowHeight = viewHeightInDp - topRowHeight + 2f
 
-    val finalTextSize: Float = if (colorConfig.useArrows && config.gridSize.first <= 15) {
-        config.textSize.toFloat() - 4f
+    val finalTextSize: Float = if (colorConfig.useArrows && config.gridSize.first <= 30) {
+        config.textSize.toFloat() - 6f
     } else {
         config.textSize.toFloat()
     }
 
-    val topRowPadding = viewHeightInDp / 12
-
-    val bottomRowPadding = if (viewHeightInDp > 200 ) {
-        //alignment is very (very) finicky...
-        54f
-    } else if (viewHeightInDp > 100 ) {
-        44f
-    } else if (viewHeightInDp > 80 ) {
-        24f
-    } else if (viewHeightInDp > 70 ) {
-        20f
-    } else {
-        24f
-    }
-
-
-    Box(
+    Column(
         modifier = GlanceModifier
             .fillMaxSize()
             .cornerRadius(8.dp)
             .background(backgroundColor)
-
     ) {
         Row(
             modifier = GlanceModifier
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .height(topRowHeight.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Bottom
         ) {
             Image(
                 modifier = GlanceModifier
-                    .padding(end = 2.dp, bottom = 2.dp, top = (topRowPadding + 4).dp),
+                    .padding(end = 2.dp, top = 0.dp),
                 provider = ImageProvider(
                     resId = R.drawable.icon_gauge,
                 ),
                 contentDescription = description,
-                colorFilter = when(colorConfig.useBackgroundColors) {
-                        true -> ColorFilter.tint(ColorProvider(textColor))
-                        else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
+                colorFilter = when (colorConfig.useBackgroundColors) {
+                    true -> ColorFilter.tint(ColorProvider(textColor))
+                    else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
                 },
             )
             Text(
                 modifier = GlanceModifier
-                    .padding(top = topRowPadding.dp),
+                    .padding(end = 2.dp, top = 2.dp),
                 text = finalTitle.uppercase(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
-                    fontSize = TextUnit(16f, TextUnitType.Sp),
+                    fontSize = TextUnit(17f, TextUnitType.Sp),
                     textAlign = alignment,
                     fontFamily = FontFamily.SansSerif
                 )
@@ -218,8 +208,10 @@ fun ColorSpeedView(
         }
         Row(
             modifier = GlanceModifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .height(bottomRowHeight.dp)
                 .padding(start = 8.dp, end = 8.dp),
+            verticalAlignment = Alignment.Bottom
         ) {
             if (colorConfig.useArrows) {
                 ArrowProvider(
@@ -230,10 +222,9 @@ fun ColorSpeedView(
             }
             Text(
                 modifier = GlanceModifier
-                    .padding(top = bottomRowPadding.dp)
+                    .fillMaxWidth()
                     .defaultWeight(),
-                text = viewHeightInDp.toString(),
-//                    ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
+                text = ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
                 style = TextStyle(
                     color = ColorProvider(textColor),
                     fontSize = TextUnit(finalTextSize, TextUnitType.Sp),
@@ -281,7 +272,7 @@ fun PreviewColorSpeedUnderSpeedLevel2() {
         context = LocalContext.current,
         currentSpeed = config.speedPercentLevel2 - 10.0,
         averageSpeed = 100.0,
-        titleResource = "lap_speed_title",
+        titleResource = "avg_speed_title",
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
