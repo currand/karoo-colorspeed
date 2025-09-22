@@ -2,7 +2,6 @@ package com.currand60.karoocolorspeed.data
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.TypedValue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.TextUnit
@@ -30,6 +29,7 @@ import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontFamily
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.currand60.karoocolorspeed.R
@@ -38,13 +38,6 @@ import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.ceil
 import kotlin.math.roundToInt
-
-fun convertSpToDp(context: Context, spValue: Float): Float {
-    val metrics = context.resources.displayMetrics
-    val spInPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, metrics)
-    val dpInPixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1.0f, metrics)
-    return spInPixels / dpInPixels
-}
 
 private fun Double.formated(): String {
     val currentLocale = Locale.getDefault()
@@ -68,8 +61,11 @@ fun ColorSpeedView(
     speedUnits: Double,
 ) {
 
-    val viewWidthInDp = ceil(config.viewSize.first / context.resources.displayMetrics.density)
-    val viewHeightInDp = ceil(config.viewSize.second / context.resources.displayMetrics.density)
+    var topRowPadding = 0f
+    var bottomTextPadding = 0f
+    var finalTextSize: Float = config.textSize.toFloat()
+
+    val viewHeightInDp: Float = ceil(config.viewSize.second / context.resources.displayMetrics.density)
 
     val speedPercentageOfAverage: Int = if (currentSpeed > 0 && averageSpeed > 0) {
         ((currentSpeed / averageSpeed) * 100.0).toInt()
@@ -77,13 +73,13 @@ fun ColorSpeedView(
         0
     }
 
-    val alignment: androidx.glance.text.TextAlign = when (config.alignment) {
-        ViewConfig.Alignment.CENTER -> androidx.glance.text.TextAlign.Center
-        ViewConfig.Alignment.LEFT -> androidx.glance.text.TextAlign.Start
-        ViewConfig.Alignment.RIGHT -> androidx.glance.text.TextAlign.End
+    val textAlignment: TextAlign = when (config.alignment) {
+            ViewConfig.Alignment.CENTER -> TextAlign.Center
+            ViewConfig.Alignment.LEFT -> TextAlign.Start
+            ViewConfig.Alignment.RIGHT -> TextAlign.End
     }
 
-    val (backgroundColor, textColor) = if (colorConfig.useBackgroundColors) {
+    val (backgroundColor: Color, textColor: Color) = if (colorConfig.useBackgroundColors) {
         when {
             currentSpeed <= colorConfig.stoppedValue.times(speedUnits) -> Pair(
                 Color.Transparent,
@@ -162,63 +158,160 @@ fun ColorSpeedView(
         val title = context.getString(titleId)
         title.uppercase()
     }
-    
-    val topRowHeight = 22f
-    val bottomRowHeight = viewHeightInDp - topRowHeight + 2f
 
-    val finalTextSize: Float = if (colorConfig.useArrows && config.gridSize.first <= 30) {
-        if (currentSpeed >= 100.0) {
-            config.textSize.toFloat() - 12f
+    val headerTextSize = TextUnit(17f, TextUnitType.Sp)
+    
+    val topRowHeight = 20f
+    val bottomRowHeight: Float = viewHeightInDp - topRowHeight
+
+    if (config.viewSize.first <= 238) {
+        if (config.viewSize.second > 300) {
+            bottomTextPadding += 11f
+            if (colorConfig.useArrows &&
+                currentSpeed >= 100.0) {
+                finalTextSize -= 24f
+            } else {
+                finalTextSize -= 6f
+            }
+        } else if (config.viewSize.second < 128) {
+            //(238,126)
+            topRowPadding += 4f
+            bottomTextPadding += 6f
         } else {
-            config.textSize.toFloat() - 8f
+            //(238,148)
+            topRowPadding += 6f
+            bottomTextPadding += 11f
+            if (colorConfig.useArrows &&
+                currentSpeed >= 100.0) {
+                finalTextSize -= 16f
+                bottomTextPadding += 4f
+                } else {
+                    finalTextSize -= 6f
+                }
         }
-    } else {
-        config.textSize.toFloat()
     }
 
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
+            .padding(start = 5.dp, end = 5.dp, top = topRowPadding.dp)
             .cornerRadius(8.dp)
             .background(backgroundColor)
     ) {
-        Row(
-            modifier = GlanceModifier
-                .fillMaxWidth()
-                .height(topRowHeight.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Image(
-                modifier = GlanceModifier
-                    .padding(end = 2.dp, top = 0.dp),
-                provider = ImageProvider(
-                    resId = R.drawable.icon_gauge,
-                ),
-                contentDescription = description,
-                colorFilter = when (colorConfig.useBackgroundColors) {
-                    true -> ColorFilter.tint(ColorProvider(textColor))
-                    else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
-                },
-            )
-            Text(
-                modifier = GlanceModifier
-                    .padding(end = 2.dp, top = 2.dp),
-                text = finalTitle.uppercase(),
-                style = TextStyle(
-                    color = ColorProvider(textColor),
-                    fontSize = TextUnit(17f, TextUnitType.Sp),
-                    textAlign = alignment,
-                    fontFamily = FontFamily.SansSerif
-                )
-            )
+        when (config.alignment) {
+            ViewConfig.Alignment.CENTER ->
+                Row(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(topRowHeight.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .wrapContentSize()
+                            .padding(end = 2.dp, top = 4.dp),
+                        provider = ImageProvider(
+                            resId = R.drawable.icon_gauge,
+                        ),
+                        contentDescription = description,
+                        colorFilter = when (colorConfig.useBackgroundColors) {
+                            true -> ColorFilter.tint(ColorProvider(textColor))
+                            else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
+                        },
+                    )
+                    Text(
+                        modifier = GlanceModifier
+                            .padding(end = 2.dp, top = 0.dp),
+                        text = finalTitle.uppercase(),
+                        style = TextStyle(
+                            color = ColorProvider(textColor),
+                            fontSize = headerTextSize,
+                            textAlign = textAlignment,
+                            fontFamily = FontFamily.SansSerif
+                        )
+                    )
+                }
+
+            ViewConfig.Alignment.LEFT ->
+                Row(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(topRowHeight.dp),
+                    verticalAlignment = Alignment.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .padding(end = 2.dp, top = 0.dp),
+                        text = finalTitle.uppercase(),
+                        style = TextStyle(
+                            color = ColorProvider(textColor),
+                            fontSize = headerTextSize,
+                            textAlign = textAlignment,
+                            fontFamily = FontFamily.SansSerif
+                        )
+                    )
+                    Image(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .wrapContentSize()
+                            .padding(end = 2.dp, top = 4.dp),
+                        provider = ImageProvider(
+                            resId = R.drawable.icon_gauge,
+                        ),
+                        contentDescription = description,
+                        colorFilter = when (colorConfig.useBackgroundColors) {
+                            true -> ColorFilter.tint(ColorProvider(textColor))
+                            else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
+                        },
+                    )
+                }
+
+            else ->
+                Row(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(topRowHeight.dp),
+                    verticalAlignment = Alignment.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .wrapContentSize()
+                            .padding(end = 2.dp, top = 4.dp),
+                        provider = ImageProvider(
+                            resId = R.drawable.icon_gauge,
+                        ),
+                        contentDescription = description,
+                        colorFilter = when (colorConfig.useBackgroundColors) {
+                            true -> ColorFilter.tint(ColorProvider(textColor))
+                            else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
+                        },
+                    )
+                    Text(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .padding(end = 2.dp, top = 0.dp),
+                        text = finalTitle.uppercase(),
+                        style = TextStyle(
+                            color = ColorProvider(textColor),
+                            fontSize = headerTextSize,
+                            textAlign = textAlignment,
+                            fontFamily = FontFamily.SansSerif
+                        )
+                    )
+                }
         }
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
                 .height(bottomRowHeight.dp)
                 .padding(start = 0.dp, end = 8.dp),
-            verticalAlignment = Alignment.Bottom,
+            verticalAlignment = Alignment.Top,
             horizontalAlignment = Alignment.Start
         ) {
             if (colorConfig.useArrows) {
@@ -235,13 +328,16 @@ fun ColorSpeedView(
             }
             Text(
                 modifier = GlanceModifier
+                    .padding(top = bottomTextPadding.dp)
                     .defaultWeight()
                     .fillMaxWidth(),
                 text = ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
+//                text = "${config.viewSize.second}",
+//                text = "${config.viewSize.first}, ${config.viewSize.second}",
                 style = TextStyle(
                     color = ColorProvider(textColor),
                     fontSize = TextUnit(finalTextSize, TextUnitType.Sp),
-                    textAlign = alignment,
+                    textAlign = textAlignment,
                     fontFamily = FontFamily.Monospace,
                 )
             )
@@ -264,7 +360,7 @@ fun PreviewColorSpeedUnderSpeedLevel1() {
         titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.CENTER,
+            alignment = ViewConfig.Alignment.RIGHT,
             textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
@@ -336,7 +432,7 @@ fun PreviewColorAtTargetLow() {
         titleResource = "avg_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.CENTER,
+            alignment = ViewConfig.Alignment.LEFT,
             textSize = 69,
             gridSize = Pair(30, 20),
             viewSize = Pair(478, 214),
@@ -386,7 +482,7 @@ fun PreviewColorSpeedUnderSpeedLevel4() {
         titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.CENTER,
+            alignment = ViewConfig.Alignment.RIGHT,
             textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
