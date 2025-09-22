@@ -24,33 +24,24 @@ import androidx.glance.unit.ColorProvider
 @SuppressLint("RestrictedApi")
 @Composable
 fun ArrowProvider (
+    modifier: GlanceModifier = GlanceModifier,
     level: Int,
-    color: Color
+    color: Color,
 ){
-//    val arrowModifier = GlanceModifier.width(28.dp).height(36.dp)
-//    val barModifier = GlanceModifier.width(28.dp).height(36.dp).padding(1.dp)
-        val arrowModifier = GlanceModifier.padding(0.dp).width(42.dp).fillMaxHeight()
-    val barModifier = GlanceModifier.width(28.dp).fillMaxHeight().padding(1.dp)
-
     when (level) {
         0 ->
-        Column(
-            modifier = GlanceModifier
-                .fillMaxHeight()
-        ) {
-            Image(
-                modifier = barModifier,
-                provider = ImageProvider(
-                    resId = R.drawable.check_indeterminate_small_24px,
-                ),
-                contentDescription = "Target",
-                contentScale = ContentScale.Fit,
-                colorFilter = ColorFilter.tint(ColorProvider(Color.Transparent))
-            )
-}
+        Image(
+            modifier = modifier,
+            provider = ImageProvider(
+                resId = R.drawable.check_indeterminate_small_24px,
+            ),
+            contentDescription = "Target",
+            contentScale = ContentScale.Fit,
+            colorFilter = ColorFilter.tint(ColorProvider(Color.Transparent))
+        )
         1 ->
             Image(
-                modifier = arrowModifier,
+                modifier = modifier,
                 provider = ImageProvider(
                     resId = R.drawable.stat_minus_2_24px,
                 ),
@@ -60,7 +51,7 @@ fun ArrowProvider (
             )
         2 ->
             Image(
-                modifier = arrowModifier,
+                modifier = modifier,
                 provider = ImageProvider(
                     resId = R.drawable.stat_minus_1_24px,
                 ),
@@ -70,7 +61,7 @@ fun ArrowProvider (
             )
         3 ->
             Image(
-                modifier = arrowModifier,
+                modifier = modifier,
                 provider = ImageProvider(
                     resId = R.drawable.stat_0_24px,
                 ),
@@ -81,7 +72,7 @@ fun ArrowProvider (
 
         4 ->
             Image(
-                modifier = arrowModifier,
+                modifier = modifier,
                 provider = ImageProvider(
                     resId = R.drawable.stat_1_24px,
                 ),
@@ -91,7 +82,7 @@ fun ArrowProvider (
             )
         5 ->
             Image(
-                modifier = arrowModifier,
+                modifier = modifier,
                 provider = ImageProvider(
                     resId = R.drawable.stat_2_24px,
                 ),

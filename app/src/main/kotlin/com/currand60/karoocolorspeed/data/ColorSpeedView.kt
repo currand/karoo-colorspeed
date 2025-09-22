@@ -16,23 +16,28 @@ import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
-import androidx.glance.layout.ContentScale
 import androidx.glance.layout.Row
+import androidx.glance.layout.fillMaxHeight
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.width
+import androidx.glance.layout.wrapContentSize
+import androidx.glance.layout.wrapContentWidth
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.text.FontFamily
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import com.currand60.karoocolorspeed.R
 import io.hammerhead.karooext.models.ViewConfig
-import kotlin.math.roundToInt
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 private fun Double.formated(): String {
     val currentLocale = Locale.getDefault()
@@ -56,7 +61,11 @@ fun ColorSpeedView(
     speedUnits: Double,
 ) {
 
+    var topRowPadding = 0f
+    var bottomTextPadding = 0f
+    var finalTextSize: Float = config.textSize.toFloat()
 
+    val viewHeightInDp: Float = ceil(config.viewSize.second / context.resources.displayMetrics.density)
 
     val speedPercentageOfAverage: Int = if (currentSpeed > 0 && averageSpeed > 0) {
         ((currentSpeed / averageSpeed) * 100.0).toInt()
@@ -64,13 +73,13 @@ fun ColorSpeedView(
         0
     }
 
-    val alignment: androidx.glance.text.TextAlign = when (config.alignment) {
-        ViewConfig.Alignment.CENTER -> androidx.glance.text.TextAlign.Center
-        ViewConfig.Alignment.LEFT -> androidx.glance.text.TextAlign.Start
-        ViewConfig.Alignment.RIGHT -> androidx.glance.text.TextAlign.End
+    val textAlignment: TextAlign = when (config.alignment) {
+            ViewConfig.Alignment.CENTER -> TextAlign.Center
+            ViewConfig.Alignment.LEFT -> TextAlign.Start
+            ViewConfig.Alignment.RIGHT -> TextAlign.End
     }
 
-    val (backgroundColor, textColor) = if (colorConfig.useBackgroundColors) {
+    val (backgroundColor: Color, textColor: Color) = if (colorConfig.useBackgroundColors) {
         when {
             currentSpeed <= colorConfig.stoppedValue.times(speedUnits) -> Pair(
                 Color.Transparent,
@@ -150,58 +159,168 @@ fun ColorSpeedView(
         title.uppercase()
     }
 
-    val finalTextSize: Float = if (colorConfig.useArrows) {
-        config.textSize.toFloat() - 6f
-    } else {
-        config.textSize.toFloat()
+    val headerTextSize = TextUnit(17f, TextUnitType.Sp)
+    
+    val topRowHeight = 20f
+    val bottomRowHeight: Float = viewHeightInDp - topRowHeight
+
+    if (config.viewSize.first <= 238) {
+        if (config.viewSize.second > 300) {
+            bottomTextPadding += 11f
+            if (colorConfig.useArrows &&
+                currentSpeed >= 100.0) {
+                finalTextSize -= 24f
+            } else {
+                finalTextSize -= 6f
+            }
+        } else if (config.viewSize.second < 128) {
+            //(238,126)
+            topRowPadding += 4f
+            bottomTextPadding += 6f
+        } else {
+            //(238,148)
+            topRowPadding += 6f
+            bottomTextPadding += 11f
+            if (colorConfig.useArrows &&
+                currentSpeed >= 100.0) {
+                finalTextSize -= 16f
+                bottomTextPadding += 4f
+                } else {
+                    finalTextSize -= 6f
+                }
+        }
     }
 
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
+            .padding(start = 5.dp, end = 5.dp, top = topRowPadding.dp)
             .cornerRadius(8.dp)
             .background(backgroundColor)
-
     ) {
-        Row(
-            modifier = GlanceModifier
-                .height(20.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalAlignment = Alignment.Bottom
-        ) {
-            Image(
-                provider = ImageProvider(
-                    resId = R.drawable.icon_gauge,
-                ),
-                contentDescription = description,
-                contentScale = ContentScale.Fit,
-                colorFilter = when(colorConfig.useBackgroundColors) {
-                        true -> ColorFilter.tint(ColorProvider(textColor))
-                        else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
-                },
-            )
-            Text(
-                modifier = GlanceModifier
-                    .defaultWeight(),
-                text = finalTitle.uppercase(),
-                style = TextStyle(
-                    color = ColorProvider(textColor),
-                    fontSize = TextUnit(16f, TextUnitType.Sp),
-                    textAlign = alignment,
-                    fontFamily = FontFamily.SansSerif
-                )
-            )
+        when (config.alignment) {
+            ViewConfig.Alignment.CENTER ->
+                Row(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(topRowHeight.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .wrapContentSize()
+                            .padding(end = 2.dp, top = 4.dp),
+                        provider = ImageProvider(
+                            resId = R.drawable.icon_gauge,
+                        ),
+                        contentDescription = description,
+                        colorFilter = when (colorConfig.useBackgroundColors) {
+                            true -> ColorFilter.tint(ColorProvider(textColor))
+                            else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
+                        },
+                    )
+                    Text(
+                        modifier = GlanceModifier
+                            .padding(end = 2.dp, top = 0.dp),
+                        text = finalTitle.uppercase(),
+                        style = TextStyle(
+                            color = ColorProvider(textColor),
+                            fontSize = headerTextSize,
+                            textAlign = textAlignment,
+                            fontFamily = FontFamily.SansSerif
+                        )
+                    )
+                }
+
+            ViewConfig.Alignment.LEFT ->
+                Row(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(topRowHeight.dp),
+                    verticalAlignment = Alignment.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .padding(end = 2.dp, top = 0.dp),
+                        text = finalTitle.uppercase(),
+                        style = TextStyle(
+                            color = ColorProvider(textColor),
+                            fontSize = headerTextSize,
+                            textAlign = textAlignment,
+                            fontFamily = FontFamily.SansSerif
+                        )
+                    )
+                    Image(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .wrapContentSize()
+                            .padding(end = 2.dp, top = 4.dp),
+                        provider = ImageProvider(
+                            resId = R.drawable.icon_gauge,
+                        ),
+                        contentDescription = description,
+                        colorFilter = when (colorConfig.useBackgroundColors) {
+                            true -> ColorFilter.tint(ColorProvider(textColor))
+                            else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
+                        },
+                    )
+                }
+
+            else ->
+                Row(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .height(topRowHeight.dp),
+                    verticalAlignment = Alignment.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .wrapContentSize()
+                            .padding(end = 2.dp, top = 4.dp),
+                        provider = ImageProvider(
+                            resId = R.drawable.icon_gauge,
+                        ),
+                        contentDescription = description,
+                        colorFilter = when (colorConfig.useBackgroundColors) {
+                            true -> ColorFilter.tint(ColorProvider(textColor))
+                            else -> ColorFilter.tint(ColorProvider(Color(context.getColor(R.color.icon_green))))
+                        },
+                    )
+                    Text(
+                        modifier = GlanceModifier
+                            .defaultWeight()
+                            .padding(end = 2.dp, top = 0.dp),
+                        text = finalTitle.uppercase(),
+                        style = TextStyle(
+                            color = ColorProvider(textColor),
+                            fontSize = headerTextSize,
+                            textAlign = textAlignment,
+                            fontFamily = FontFamily.SansSerif
+                        )
+                    )
+                }
         }
         Row(
             modifier = GlanceModifier
-                .fillMaxSize()
-                .defaultWeight()
-                .padding(horizontal = 2.dp),
-            verticalAlignment = Alignment.Bottom,
+                .fillMaxWidth()
+                .height(bottomRowHeight.dp)
+                .padding(start = 0.dp, end = 8.dp),
+            verticalAlignment = Alignment.Top,
+            horizontalAlignment = Alignment.Start
         ) {
             if (colorConfig.useArrows) {
                 ArrowProvider(
+                    modifier = GlanceModifier
+                        .fillMaxHeight()
+                        .defaultWeight()
+                        .wrapContentWidth()
+                        .width(30.dp),
                     level = barLevel,
                     color = textColor
                 )
@@ -209,12 +328,16 @@ fun ColorSpeedView(
             }
             Text(
                 modifier = GlanceModifier
-                    .defaultWeight(),
+                    .padding(top = bottomTextPadding.dp)
+                    .defaultWeight()
+                    .fillMaxWidth(),
                 text = ((currentSpeed * 10.0).roundToInt() / 10.0).formated(),
+//                text = "${config.viewSize.second}",
+//                text = "${config.viewSize.first}, ${config.viewSize.second}",
                 style = TextStyle(
                     color = ColorProvider(textColor),
                     fontSize = TextUnit(finalTextSize, TextUnitType.Sp),
-                    textAlign = alignment,
+                    textAlign = textAlignment,
                     fontFamily = FontFamily.Monospace,
                 )
             )
@@ -225,7 +348,7 @@ fun ColorSpeedView(
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel1() {
     val config = ConfigData.DEFAULT
@@ -238,7 +361,7 @@ fun PreviewColorSpeedUnderSpeedLevel1() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 42,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -250,7 +373,7 @@ fun PreviewColorSpeedUnderSpeedLevel1() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel2() {
     val config = ConfigData.DEFAULT
@@ -258,11 +381,11 @@ fun PreviewColorSpeedUnderSpeedLevel2() {
         context = LocalContext.current,
         currentSpeed = config.speedPercentLevel2 - 10.0,
         averageSpeed = 100.0,
-        titleResource = "lap_speed_title",
+        titleResource = "avg_speed_title",
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 42,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -274,7 +397,7 @@ fun PreviewColorSpeedUnderSpeedLevel2() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorUnderTargetLow() {
     val config = ConfigData.DEFAULT
@@ -286,7 +409,7 @@ fun PreviewColorUnderTargetLow() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 42,
+            textSize = 69,
             gridSize = Pair(30, 20),
             viewSize = Pair(478, 214),
             preview = true
@@ -298,7 +421,7 @@ fun PreviewColorUnderTargetLow() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorAtTargetLow() {
     val config = ConfigData.DEFAULT
@@ -309,8 +432,8 @@ fun PreviewColorAtTargetLow() {
         titleResource = "avg_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.CENTER,
-            textSize = 42,
+            alignment = ViewConfig.Alignment.LEFT,
+            textSize = 69,
             gridSize = Pair(30, 20),
             viewSize = Pair(478, 214),
             preview = true
@@ -322,7 +445,7 @@ fun PreviewColorAtTargetLow() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65, )
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedAtTargetHigh() {
     val config = ConfigData.DEFAULT
@@ -335,7 +458,7 @@ fun PreviewColorSpeedAtTargetHigh() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.LEFT,
-            textSize = 36,
+            textSize = 69,
             gridSize = Pair(60, 20),
             viewSize = Pair(478, 214),
             preview = true,
@@ -347,7 +470,7 @@ fun PreviewColorSpeedAtTargetHigh() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel4() {
     val config = ConfigData.DEFAULT
@@ -359,8 +482,8 @@ fun PreviewColorSpeedUnderSpeedLevel4() {
         titleResource = "lap_speed_title",
         description = "Stuff",
         config = ViewConfig(
-            alignment = ViewConfig.Alignment.CENTER,
-            textSize = 36,
+            alignment = ViewConfig.Alignment.RIGHT,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -372,10 +495,11 @@ fun PreviewColorSpeedUnderSpeedLevel4() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel5() {
-    val config = ConfigData.DEFAULT
+    var config = ConfigData.DEFAULT
+    config = config.copy(useArrows = false)
 
     ColorSpeedView(
         context = LocalContext.current,
@@ -385,19 +509,19 @@ fun PreviewColorSpeedUnderSpeedLevel5() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 36,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
         ),
-        colorConfig = ConfigData.DEFAULT,
+        colorConfig = config,
         speedUnits = 2.23694
     )
 }
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewColorSpeedOverSpeedLevel5() {
     val config = ConfigData.DEFAULT
@@ -410,7 +534,7 @@ fun PreviewColorSpeedOverSpeedLevel5() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 36,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
@@ -422,7 +546,7 @@ fun PreviewColorSpeedOverSpeedLevel5() {
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = 140, heightDp = 65)
+@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
 @Composable
 fun PreviewNoBackgroundColors() {
     ColorSpeedView(
@@ -433,7 +557,7 @@ fun PreviewNoBackgroundColors() {
         description = "Stuff",
         config = ViewConfig(
             alignment = ViewConfig.Alignment.CENTER,
-            textSize = 36,
+            textSize = 50,
             gridSize = Pair(30, 15),
             viewSize = Pair(238, 148),
             preview = true
