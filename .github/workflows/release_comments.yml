@@ -3,7 +3,7 @@ name: Comment on Fixed Issues/PRs on Release
 on:
   push:
     tags:
-      - '*'
+      - '*[0-9]-release'
   workflow_dispatch:
     inputs:
       tag:
