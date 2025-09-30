@@ -63,7 +63,7 @@ class CurrentVsLapAverageSpeed(
                 UpdateGraphicConfig(showHeader = false)
             )
             emitter.onNext(
-                UpdateNumericConfig(DataType.Field.SPEED)
+                UpdateNumericConfig(DataType.Type.SPEED)
             )
         }
         val viewJob = dataScope.launch {
