@@ -83,7 +83,7 @@ fun ColorSpeedView(
         when {
             currentSpeed <= colorConfig.stoppedValue.times(speedUnits) -> Pair(
                 Color.Transparent,
-                Color(context.getColor(R.color.text_color))
+                Color(context.getColor(R.color.black))
             )
 
             speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> Pair(
@@ -91,7 +91,7 @@ fun ColorSpeedView(
                     context.getColor(
                         R.color.dark_red
                     )
-                ), Color(context.getColor(R.color.text_color_max))
+                ), Color(context.getColor(R.color.white))
             )
 
             speedPercentageOfAverage < colorConfig.speedPercentLevel2 -> Pair(
@@ -104,12 +104,12 @@ fun ColorSpeedView(
 
             speedPercentageOfAverage < colorConfig.speedPercentMiddleTargetLow -> Pair(
                 Color(context.getColor(R.color.orange)),
-                Color(context.getColor(R.color.text_color_max))
+                Color(context.getColor(R.color.white))
             )
 
             speedPercentageOfAverage in (colorConfig.speedPercentMiddleTargetLow..colorConfig.speedPercentMiddleTargetHigh) -> Pair(
                 Color(context.getColor(R.color.middle_light)),
-                Color(context.getColor(R.color.text_color))
+                Color(context.getColor(R.color.black))
             )
 
             speedPercentageOfAverage < colorConfig.speedPercentLevel4 -> Pair(
@@ -117,7 +117,7 @@ fun ColorSpeedView(
                     context.getColor(
                         R.color.light_green
                     )
-                ), Color(context.getColor(R.color.text_color))
+                ), Color(context.getColor(R.color.black))
             )
 
             speedPercentageOfAverage < colorConfig.speedPercentLevel5 -> Pair(
@@ -125,12 +125,12 @@ fun ColorSpeedView(
                     context.getColor(
                         R.color.dark_green
                     )
-                ), Color(context.getColor(R.color.text_color_max))
+                ), Color(context.getColor(R.color.white))
             )
 
             else -> Pair(
                 Color(context.getColor(R.color.dark_green)),
-                Color(context.getColor(R.color.text_color_max))
+                Color(context.getColor(R.color.white))
             )
         }
     } else {
@@ -348,7 +348,10 @@ fun ColorSpeedView(
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = (238 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
+@Preview(
+    widthDp = (238 / 1.9).toInt(),
+    heightDp = (148 / 1.9).toInt()
+)
 @Composable
 fun PreviewColorSpeedUnderSpeedLevel1() {
     val config = ConfigData.DEFAULT
