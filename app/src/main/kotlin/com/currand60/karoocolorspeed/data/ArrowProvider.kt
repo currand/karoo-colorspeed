@@ -1,21 +1,16 @@
 package com.currand60.karoocolorspeed.data
 
 import android.annotation.SuppressLint
+import androidx.compose.material.icons.Icons
 import com.currand60.karoocolorspeed.R
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
-import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
-import androidx.glance.layout.fillMaxHeight
-import androidx.glance.layout.height
-import androidx.glance.layout.padding
-import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.unit.ColorProvider
@@ -30,15 +25,7 @@ fun ArrowProvider (
 ){
     when (level) {
         0 ->
-        Image(
-            modifier = modifier,
-            provider = ImageProvider(
-                resId = R.drawable.check_indeterminate_small_24px,
-            ),
-            contentDescription = "Target",
-            contentScale = ContentScale.Fit,
-            colorFilter = ColorFilter.tint(ColorProvider(Color.Transparent))
-        )
+            Icons.Default
         1 ->
             Image(
                 modifier = modifier,
@@ -94,6 +81,7 @@ fun ArrowProvider (
     }
 }
 
+@Suppress("unused")
 @SuppressLint("RestrictedApi")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)
@@ -107,6 +95,7 @@ fun PreviewBarsTarget(){
     )
 }
 
+@Suppress("unused")
 @SuppressLint("RestrictedApi")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)
@@ -120,6 +109,7 @@ fun PreviewBars1(){
     )
 }
 
+@Suppress("unused")
 @SuppressLint("RestrictedApi")
 @OptIn(ExperimentalGlancePreviewApi::class)
 @Preview(widthDp = 150, heightDp = 90)

@@ -51,8 +51,8 @@ android {
         applicationId = "com.currand60.karoocolorspeed"
         minSdk = 23
         targetSdk = 34
-        versionCode = 25093003
-        versionName = "0.4.3"
+        versionCode = 250100101
+        versionName = "0.4.4"
         signingConfig = signingConfigs.getByName("debug")
     }
 
