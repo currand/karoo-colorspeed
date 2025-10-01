@@ -1,4 +1,14 @@
+import groovy.json.JsonBuilder
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+val projectName = "karoo-colorspeed"
+val screenshotBaseNames = listOf(
+    "example1.png", "example2.png", "example3.png", "example4.png",
+    "config_screen.png", "config_screen2.png"
+)
+val projectLabel = "Karoo Color Speed"
+val projectDescription = "Colored Speed and icon indicator based on ride or lap average speed"
+val projectDeveloper = "currand"
 
 plugins {
     alias(libs.plugins.android.application)
@@ -6,6 +16,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.devtools.ksp)
 }
+
 
 kotlin {
     compilerOptions {
@@ -62,34 +73,61 @@ dependencies {
     implementation(libs.bundles.compose.ui)
 }
 
-tasks.register("generateManifest") {
+abstract class GenerateManifestTask : DefaultTask() {
+
+    @get:Input
+    abstract val preReleaseVersion: Property<String>
+
+    @TaskAction
+    fun generate() {
+        val androidExtension = project.extensions.getByName("android") as com.android.build.gradle.AppExtension
+        val defaultConfig = androidExtension.defaultConfig
+
+        val manifestFile = project.file("${project.projectDir}/manifest.json")
+
+        val currentPreReleaseVersion = preReleaseVersion.orNull?.takeIf { it.isNotBlank() }
+        println("Debug: preReleaseVersion from task property: $currentPreReleaseVersion")
+
+        val releasePathComponent = if (currentPreReleaseVersion != null) {
+            "download/$currentPreReleaseVersion" // e.g., "download/v0.4.2-pre-release"
+        } else {
+            "latest/download" // Default for stable releases or local builds
+        }
+
+        val baseUrl = "https://github.com/currand/$projectName/releases/$releasePathComponent"
+        val apkFileName = "app-release.apk" // Assuming your APK is always named this
+        val screenshotUrls = screenshotBaseNames.map { "$baseUrl/$it" }
+
+        // Construct the manifest as a Map
+        val manifest = mapOf(
+            "label" to projectLabel,
+            "packageName" to androidExtension.namespace,
+            "latestApkUrl" to "$baseUrl/$apkFileName",
+            "latestVersion" to defaultConfig.versionName,
+            "latestVersionCode" to defaultConfig.versionCode,
+            "developer" to projectDeveloper,
+            "description" to projectDescription,
+            "screenshotUrls" to screenshotUrls
+        )
+
+        // Use groovy.json.JsonBuilder to serialize the Map to a pretty-printed JSON string
+        val gson = JsonBuilder(manifest).toPrettyString()
+        manifestFile.writeText(gson)
+        println("Generated manifest.json with download path: $releasePathComponent")
+    }
+}
+
+
+tasks.register<GenerateManifestTask>("generateManifest") {
     description = "Generates manifest.json with current version information"
     group = "build"
 
-    doLast {
-        val manifestFile = file("$projectDir/manifest.json")
-        val manifest = mapOf(
-            "label" to "Karoo Color Speed",
-            "packageName" to android.namespace,
-            "latestApkUrl" to "https://github.com/currand/karoo-colorspeed/releases/latest/download/app-release.apk",
-            "latestVersion" to android.defaultConfig.versionName,
-            "latestVersionCode" to android.defaultConfig.versionCode,
-            "developer" to "currand",
-            "description" to "Colored Speed and icon indicator based on ride or lap average speed",
-            "screenshotUrls" to listOf(
-                "https://github.com/currand/karoo-colorspeed/releases/latest/download/example1.png",
-                "https://github.com/currand/karoo-colorspeed/releases/latest/download/example2.png",
-                "https://github.com/currand/karoo-colorspeed/releases/latest/download/example3.png",
-                "https://github.com/currand/karoo-colorspeed/releases/latest/download/example4.png",
-                "https://github.com/currand/karoo-colorspeed/releases/latest/download/config_screen.png",
-                "https://github.com/currand/karoo-colorspeed/releases/latest/download/config_screen2.png"
-            ),
-        )
-
-        val gson = groovy.json.JsonBuilder(manifest).toPrettyString()
-        manifestFile.writeText(gson)
-        println("Generated manifest.json with version ${android.defaultConfig.versionName} (${android.defaultConfig.versionCode})")
-    }
+    // Configure the 'preReleaseVersion' property of the task.
+    // It attempts to read a Gradle property named "preReleaseVersion".
+    // If the property is not provided (e.g., in local builds), it defaults to an empty string.
+    preReleaseVersion.set(project.providers.gradleProperty("preReleaseVersion")
+        .getOrElse("")
+    )
 }
 
 tasks.named("assemble") {
