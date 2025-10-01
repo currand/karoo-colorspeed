@@ -8,26 +8,6 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
 }
 
-dependencies {
-    implementation(libs.hammerhead.karoo.ext)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.bundles.androidx.lifeycle)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.bundles.compose.ui)
-    implementation(libs.androidx.material.icons.core)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.glance.preview)
-    implementation(libs.androidx.glance.appwidget.preview)
-    implementation(libs.androidx.navigation.runtime.android)
-    implementation(libs.javax.inject)
-    implementation(libs.timber)
-    implementation(libs.kotlinx.coroutines.debug)
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-}
-
 val projectName = "karoo-colorspeed"
 val screenshotBaseNames = listOf(
     "example1.png", "example2.png", "example3.png", "example4.png",
@@ -85,23 +65,48 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.hammerhead.karoo.ext)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.bundles.androidx.lifeycle)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.bundles.compose.ui)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.preview)
+    implementation(libs.androidx.glance.appwidget.preview)
+    implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.javax.inject)
+    implementation(libs.timber)
+    implementation(libs.kotlinx.coroutines.debug)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.material.icons.extended)
 }
 
-abstract class GenerateManifestTask : DefaultTask() {
+tasks.register("generateManifest") {
+    description = "Generates manifest.json with current version information"
+    group = "build"
 
-    @get:Input
-    abstract val preReleaseVersion: Property<String>
+    // Retrieve the preReleaseVersion property at configuration time.
+    // This makes it a declared input to the task.
+    val preReleaseVersion = project.providers.gradleProperty("preReleaseVersion")
+        .getOrElse("")
 
-    @TaskAction
-    fun generate() {
+    // Declare the preReleaseVersion as an input property for Gradle's up-to-date checks.
+    // If this value doesn't change, the task won't re-run.
+    inputs.property("preReleaseVersion", preReleaseVersion)
+
+    // The task action, equivalent to the @TaskAction method in the class-based approach.
+    doLast {
         val androidExtension = project.extensions.getByName("android") as com.android.build.gradle.AppExtension
         val defaultConfig = androidExtension.defaultConfig
 
         val manifestFile = project.file("${project.projectDir}/manifest.json")
 
-        val currentPreReleaseVersion = preReleaseVersion.orNull?.takeIf { it.isNotBlank() }
-        println("Debug: preReleaseVersion from task property: $currentPreReleaseVersion")
+        // Use the 'preReleaseVersion' value obtained at configuration time
+        val currentPreReleaseVersion = preReleaseVersion.takeIf { it.isNotBlank() }
+        println("Debug: preReleaseVersion from task input: $currentPreReleaseVersion")
 
         val releasePathComponent = if (currentPreReleaseVersion != null) {
             "download/$currentPreReleaseVersion" // e.g., "download/v0.4.2-pre-release"
@@ -109,8 +114,9 @@ abstract class GenerateManifestTask : DefaultTask() {
             "latest/download" // Default for stable releases or local builds
         }
 
-        val baseUrl = "https://github.com/currand/$projectName/releases/$releasePathComponent"
-        val apkFileName = "app-release.apk" // Assuming your APK is always named this
+        val baseUrl = "https://github.com/$projectDeveloper/$projectName/releases/$releasePathComponent"
+        val apkFileName = "app-release.apk"
+
         val screenshotUrls = screenshotBaseNames.map { "$baseUrl/$it" }
 
         // Construct the manifest as a Map
@@ -133,18 +139,6 @@ abstract class GenerateManifestTask : DefaultTask() {
 }
 
 
-tasks.register<GenerateManifestTask>("generateManifest") {
-    description = "Generates manifest.json with current version information"
-    group = "build"
-
-    // Configure the 'preReleaseVersion' property of the task.
-    // It attempts to read a Gradle property named "preReleaseVersion".
-    // If the property is not provided (e.g., in local builds), it defaults to an empty string.
-    preReleaseVersion.set(project.providers.gradleProperty("preReleaseVersion")
-        .getOrElse("")
-    )
-}
-
 tasks.named("assemble") {
     dependsOn("generateManifest")
 }
@@ -154,4 +148,3 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
-
