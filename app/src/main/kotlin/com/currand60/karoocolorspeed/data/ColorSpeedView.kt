@@ -83,7 +83,7 @@ fun ColorSpeedView(
         when {
             currentSpeed <= colorConfig.stoppedValue.times(speedUnits) -> Pair(
                 Color.Transparent,
-                Color(context.getColor(R.color.black))
+                Color(context.getColor(R.color.text_color))
             )
 
             speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> Pair(

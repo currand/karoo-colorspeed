@@ -1,6 +1,33 @@
 import groovy.json.JsonBuilder
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.google.devtools.ksp)
+}
+
+dependencies {
+    implementation(libs.hammerhead.karoo.ext)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.bundles.androidx.lifeycle)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.bundles.compose.ui)
+    implementation(libs.androidx.material.icons.core)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.glance.appwidget)
+    implementation(libs.androidx.glance.preview)
+    implementation(libs.androidx.glance.appwidget.preview)
+    implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.javax.inject)
+    implementation(libs.timber)
+    implementation(libs.kotlinx.coroutines.debug)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+}
+
 val projectName = "karoo-colorspeed"
 val screenshotBaseNames = listOf(
     "example1.png", "example2.png", "example3.png", "example4.png",
@@ -9,14 +36,6 @@ val screenshotBaseNames = listOf(
 val projectLabel = "Karoo Color Speed"
 val projectDescription = "Colored Speed and icon indicator based on ride or lap average speed"
 val projectDeveloper = "currand"
-
-plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.google.devtools.ksp)
-}
-
 
 kotlin {
     compilerOptions {
@@ -66,12 +85,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.hammerhead.karoo.ext)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.bundles.androidx.lifeycle)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.bundles.compose.ui)
-    implementation(libs.androidx.material.icons.core)
+
 }
 
 abstract class GenerateManifestTask : DefaultTask() {
@@ -141,20 +155,3 @@ java {
     }
 }
 
-dependencies {
-    implementation(libs.hammerhead.karoo.ext)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.bundles.androidx.lifeycle)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.bundles.compose.ui)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.glance.appwidget)
-    implementation(libs.androidx.glance.preview)
-    implementation(libs.androidx.glance.appwidget.preview)
-    implementation(libs.androidx.navigation.runtime.android)
-    implementation(libs.javax.inject)
-    implementation(libs.timber)
-    implementation(libs.kotlinx.coroutines.debug)
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-}
