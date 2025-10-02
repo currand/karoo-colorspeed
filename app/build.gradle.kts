@@ -96,13 +96,15 @@ tasks.register("generateManifest") {
     // Declare the preReleaseVersion as an input property for Gradle's up-to-date checks.
     // If this value doesn't change, the task won't re-run.
     inputs.property("preReleaseVersion", preReleaseVersion)
+    val manifestOutputFile = layout.projectDirectory.file("manifest.json")
+    outputs.file(manifestOutputFile).withPropertyName("manifestFile")
 
     // The task action, equivalent to the @TaskAction method in the class-based approach.
     doLast {
         val androidExtension = project.extensions.getByName("android") as com.android.build.gradle.AppExtension
         val defaultConfig = androidExtension.defaultConfig
 
-        val manifestFile = project.file("${project.projectDir}/manifest.json")
+        val manifestFile = manifestOutputFile.asFile
 
         // Use the 'preReleaseVersion' value obtained at configuration time
         val currentPreReleaseVersion = preReleaseVersion.takeIf { it.isNotBlank() }
@@ -134,7 +136,7 @@ tasks.register("generateManifest") {
         // Use groovy.json.JsonBuilder to serialize the Map to a pretty-printed JSON string
         val gson = JsonBuilder(manifest).toPrettyString()
         manifestFile.writeText(gson)
-        println("Generated manifest.json with download path: $releasePathComponent")
+        println("Generated manifest.json with download path: $releasePathComponent at ${manifestFile.absolutePath}")
     }
 }
 
