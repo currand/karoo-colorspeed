@@ -83,7 +83,7 @@ fun ColorSpeedView(
         when {
             currentSpeed <= colorConfig.stoppedValue.times(speedUnits) -> Pair(
                 Color.Transparent,
-                Color(context.getColor(R.color.black))
+                Color(context.getColor(R.color.text_color))
             )
 
             speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> Pair(
@@ -211,7 +211,7 @@ fun ColorSpeedView(
                         modifier = GlanceModifier
                             .defaultWeight()
                             .wrapContentSize()
-                            .padding(end = 2.dp, top = 4.dp),
+                            .padding(end = 2.dp, top = 5.dp),
                         provider = ImageProvider(
                             resId = R.drawable.icon_gauge,
                         ),
@@ -258,7 +258,7 @@ fun ColorSpeedView(
                         modifier = GlanceModifier
                             .defaultWeight()
                             .wrapContentSize()
-                            .padding(end = 2.dp, top = 4.dp),
+                            .padding(end = 2.dp, top = 5.dp),
                         provider = ImageProvider(
                             resId = R.drawable.icon_gauge,
                         ),
@@ -282,7 +282,7 @@ fun ColorSpeedView(
                         modifier = GlanceModifier
                             .defaultWeight()
                             .wrapContentSize()
-                            .padding(end = 2.dp, top = 4.dp),
+                            .padding(end = 2.dp, top = 5.dp),
                         provider = ImageProvider(
                             resId = R.drawable.icon_gauge,
                         ),
@@ -345,6 +345,31 @@ fun ColorSpeedView(
     }
 }
 
+@Suppress("unused")
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(
+    widthDp = (238 / 1.9).toInt(),
+    heightDp = (148 / 1.9).toInt()
+)
+@Composable
+fun PreviewNoSpeed() {
+    ColorSpeedView(
+        context = LocalContext.current,
+        currentSpeed = 0.0,
+        averageSpeed = 100.0,
+        titleResource = "lap_speed_title",
+        description = "Stuff",
+        config = ViewConfig(
+            alignment = ViewConfig.Alignment.RIGHT,
+            textSize = 50,
+            gridSize = Pair(30, 15),
+            viewSize = Pair(238, 148),
+            preview = true
+        ),
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
+    )
+}
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
@@ -398,78 +423,6 @@ fun PreviewColorSpeedUnderSpeedLevel2() {
     )
 }
 
-@Suppress("unused")
-@OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
-@Composable
-fun PreviewColorUnderTargetLow() {
-    val config = ConfigData.DEFAULT
-    ColorSpeedView(
-        context = LocalContext.current,
-        currentSpeed = config.speedPercentMiddleTargetLow - 1.0,
-        averageSpeed = 100.0,
-        titleResource = "avg_speed_title",
-        description = "Stuff",
-        config = ViewConfig(
-            alignment = ViewConfig.Alignment.RIGHT,
-            textSize = 69,
-            gridSize = Pair(30, 20),
-            viewSize = Pair(478, 214),
-            preview = true
-        ),
-        colorConfig = ConfigData.DEFAULT,
-        speedUnits = 2.23694
-    )
-}
-
-@Suppress("unused")
-@OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
-@Composable
-fun PreviewColorAtTargetLow() {
-    val config = ConfigData.DEFAULT
-    ColorSpeedView(
-        context = LocalContext.current,
-        currentSpeed = config.speedPercentMiddleTargetLow + 1.0,
-        averageSpeed = 100.0,
-        titleResource = "avg_speed_title",
-        description = "Stuff",
-        config = ViewConfig(
-            alignment = ViewConfig.Alignment.LEFT,
-            textSize = 69,
-            gridSize = Pair(30, 20),
-            viewSize = Pair(478, 214),
-            preview = true
-        ),
-        colorConfig = ConfigData.DEFAULT,
-        speedUnits = 2.23694
-    )
-}
-
-@Suppress("unused")
-@OptIn(ExperimentalGlancePreviewApi::class)
-@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
-@Composable
-fun PreviewColorSpeedAtTargetHigh() {
-    val config = ConfigData.DEFAULT
-
-    ColorSpeedView(
-        context = LocalContext.current,
-        currentSpeed = config.speedPercentMiddleTargetHigh - 0.5,
-        averageSpeed = 100.0,
-        titleResource = "speed_title",
-        description = "Stuff",
-        config = ViewConfig(
-            alignment = ViewConfig.Alignment.LEFT,
-            textSize = 69,
-            gridSize = Pair(60, 20),
-            viewSize = Pair(478, 214),
-            preview = true,
-        ),
-        colorConfig = ConfigData.DEFAULT,
-        speedUnits = 2.23694
-    )
-}
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)
@@ -570,3 +523,75 @@ fun PreviewNoBackgroundColors() {
     )
 }
 
+@Suppress("unused")
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
+@Composable
+fun PreviewColorUnderTargetLow() {
+    val config = ConfigData.DEFAULT
+    ColorSpeedView(
+        context = LocalContext.current,
+        currentSpeed = config.speedPercentMiddleTargetLow - 1.0,
+        averageSpeed = 100.0,
+        titleResource = "avg_speed_title",
+        description = "Stuff",
+        config = ViewConfig(
+            alignment = ViewConfig.Alignment.RIGHT,
+            textSize = 69,
+            gridSize = Pair(30, 20),
+            viewSize = Pair(478, 214),
+            preview = true
+        ),
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
+    )
+}
+
+@Suppress("unused")
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
+@Composable
+fun PreviewColorAtTargetLow() {
+    val config = ConfigData.DEFAULT
+    ColorSpeedView(
+        context = LocalContext.current,
+        currentSpeed = config.speedPercentMiddleTargetLow + 1.0,
+        averageSpeed = 100.0,
+        titleResource = "avg_speed_title",
+        description = "Stuff",
+        config = ViewConfig(
+            alignment = ViewConfig.Alignment.LEFT,
+            textSize = 69,
+            gridSize = Pair(30, 20),
+            viewSize = Pair(478, 214),
+            preview = true
+        ),
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
+    )
+}
+
+@Suppress("unused")
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = (478 / 1.9).toInt(), heightDp = (148 / 1.9).toInt())
+@Composable
+fun PreviewColorSpeedAtTargetHigh() {
+    val config = ConfigData.DEFAULT
+
+    ColorSpeedView(
+        context = LocalContext.current,
+        currentSpeed = config.speedPercentMiddleTargetHigh - 0.5,
+        averageSpeed = 100.0,
+        titleResource = "speed_title",
+        description = "Stuff",
+        config = ViewConfig(
+            alignment = ViewConfig.Alignment.LEFT,
+            textSize = 69,
+            gridSize = Pair(60, 20),
+            viewSize = Pair(478, 214),
+            preview = true,
+        ),
+        colorConfig = ConfigData.DEFAULT,
+        speedUnits = 2.23694
+    )
+}

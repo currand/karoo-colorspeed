@@ -3,16 +3,10 @@ name: Pre-Release Build
 on:
   workflow_dispatch: # Allows manual triggering of the workflow
   push:
-    # This workflow will now only be triggered on direct pushes to any branch EXCEPT 'master'.
-    # This is for general CI/testing on feature branches. The 'Create Release' step will not run here.
-    branches: [ "!master" ]
-    # This workflow will still be triggered when a tag matching the '*-pre-release' pattern is pushed.
-    # When triggered by a tag, 'actions/checkout' will checkout the commit associated with that tag.
+    branches-ignore: [ "master" ]
     tags: [ "*-pre-release" ]
   pull_request:
-    # Keeping this if you want CI/CD checks for pull requests targeting the 'master' branch.
-    # The 'Create Release' step will NOT run for PRs, as it's conditional on tags.
-    branches: [ "master" ]
+    branches-ignore: [ "master" ]
 
 jobs:
   build:
@@ -71,8 +65,9 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew build -PpreReleaseVersion=${{ env.RELEASE_VERSION }}
 
     - name: Archive APK
       uses: actions/upload-artifact@v4
