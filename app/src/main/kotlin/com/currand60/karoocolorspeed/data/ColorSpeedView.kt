@@ -89,7 +89,7 @@ fun ColorSpeedView(
             speedPercentageOfAverage < colorConfig.speedPercentLevel1 -> Pair(
                 Color(
                     context.getColor(
-                        R.color.dark_red
+                        R.color.zone_9
                     )
                 ), Color(context.getColor(R.color.white))
             )
@@ -97,13 +97,13 @@ fun ColorSpeedView(
             speedPercentageOfAverage < colorConfig.speedPercentLevel2 -> Pair(
                 Color(
                     context.getColor(
-                        R.color.light_red
+                        R.color.zone_8
                     )
                 ), Color(context.getColor(R.color.white))
             )
 
             speedPercentageOfAverage < colorConfig.speedPercentMiddleTargetLow -> Pair(
-                Color(context.getColor(R.color.orange)),
+                Color(context.getColor(R.color.zone_7)),
                 Color(context.getColor(R.color.white))
             )
 
@@ -115,7 +115,7 @@ fun ColorSpeedView(
             speedPercentageOfAverage < colorConfig.speedPercentLevel4 -> Pair(
                 Color(
                     context.getColor(
-                        R.color.light_green
+                        R.color.zone_3
                     )
                 ), Color(context.getColor(R.color.black))
             )
@@ -123,13 +123,13 @@ fun ColorSpeedView(
             speedPercentageOfAverage < colorConfig.speedPercentLevel5 -> Pair(
                 Color(
                     context.getColor(
-                        R.color.dark_green
+                        R.color.zone_2
                     )
                 ), Color(context.getColor(R.color.white))
             )
 
             else -> Pair(
-                Color(context.getColor(R.color.dark_green)),
+                Color(context.getColor(R.color.zone_2)),
                 Color(context.getColor(R.color.white))
             )
         }

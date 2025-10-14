@@ -13,4 +13,13 @@
     <color name="dark_red">#D60303</color>
     <color name="max">#B406A2</color>
     <color name="icon_green">#46926A</color>
+    <color name="zone_1">#2286D9</color> <!-- Recovery Zone Color -->
+    <color name="zone_2">#01B988</color> <!-- Endurance Zone Color -->
+    <color name="zone_3">#60EEB3</color> <!-- Tempo Zone Color -->
+    <color name="zone_4">#FFF500</color> <!-- Threshold Zone Color -->
+    <color name="zone_5">#FDC94C</color> <!-- VO2 Max Zone Color -->
+    <color name="zone_6">#FC8C66</color> <!-- Anaerobic Capacity Zone Color (part 1) -->
+    <color name="zone_7">#FE591F</color> <!-- Anaerobic Capacity Zone Color (part 2) -->
+    <color name="zone_8">#D60604</color> <!-- Anaerobic Capacity Zone Color (part 3) -->
+    <color name="zone_9">#B800A2</color> <!-- Anaerobic Capacity Zone Color (part 4) -->
 </resources>

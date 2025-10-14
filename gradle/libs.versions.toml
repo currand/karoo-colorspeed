@@ -9,13 +9,13 @@ javaxInject = "1"
 androidxCore = "1.17.0"
 androidxLifecycle = "2.9.4"
 androidxActivity = "1.11.0"
-androidxComposeUi = "1.9.2"
+androidxComposeUi = "1.9.3"
 androidxComposeMaterial = "1.4.0"
 glance = "1.1.1"
 timber = "5.0.1"
 koin-bom = "4.1.1"
 glancePreview = "1.1.1"
-hammerHeadExt  = "1.1.5"
+hammerHeadExt  = "1.1.6"
 
 
 [plugins]

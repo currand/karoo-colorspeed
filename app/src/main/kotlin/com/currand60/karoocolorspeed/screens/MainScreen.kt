@@ -271,7 +271,7 @@ fun MainScreen(
                         .weight(0.2f)
                         .aspectRatio(1f)
                         .clip(CircleShape)
-                        .background(color = Color(context.getColor(R.color.dark_red)), CircleShape)
+                        .background(color = Color(context.getColor(R.color.zone_8)), CircleShape)
                 )
                 PercentConfigField(
                     label = context.getString(R.string.well_below_target),
@@ -305,7 +305,7 @@ fun MainScreen(
                         .weight(0.2f)
                         .aspectRatio(1f)
                         .clip(CircleShape)
-                        .background(color = Color(context.getColor(R.color.orange)), CircleShape)
+                        .background(color = Color(context.getColor(R.color.zone_7)), CircleShape)
                 )
                 PercentConfigField(
                     label = context.getString(R.string.below_target),
@@ -338,7 +338,7 @@ fun MainScreen(
                         .weight(0.2f)
                         .aspectRatio(1f)
                         .clip(CircleShape)
-                        .background(color = Color(context.getColor(R.color.middle)), CircleShape)
+                        .background(color = Color(context.getColor(R.color.middle_light)), CircleShape)
                 )
                 PercentConfigField(
                     label = context.getString(R.string.target_low),
@@ -393,7 +393,7 @@ fun MainScreen(
                         .weight(0.2f)
                         .aspectRatio(1f)
                         .clip(CircleShape)
-                        .background(color = Color(context.getColor(R.color.light_green)), CircleShape)
+                        .background(color = Color(context.getColor(R.color.zone_3)), CircleShape)
                 )
                 PercentConfigField(
                     label = context.getString(R.string.above_target),
@@ -426,7 +426,7 @@ fun MainScreen(
                         .weight(0.2f)
                         .aspectRatio(1f)
                         .clip(CircleShape)
-                        .background(color = Color(context.getColor(R.color.dark_green)), CircleShape)
+                        .background(color = Color(context.getColor(R.color.zone_2)), CircleShape)
                 )
                 PercentConfigField(
                     label = context.getString(R.string.well_above_target),
